@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Ray-Trace Studio — Vector Export System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,6 +171,58 @@
     animation: pulse 1.5s ease-in-out infinite;
   }
   @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  /* =========================================
+     موبایل و تبلت (رسپانسیو)
+     به کدهای دسکتاپ بالاتر دست نخورده است
+     ========================================= */
+  @media only screen and (max-width: 768px) {
+    .panel { backdrop-filter: blur(10px); }
+    
+    /* پنل کنترل بالا */
+    .control-panel {
+      top: 10px; left: 10px; right: 10px;
+      width: auto; max-width: none; padding: 14px;
+      border-radius: 12px; max-height: 55vh; overflow-y: auto;
+    }
+    .control-panel h1 { font-size: 15px; }
+    .control-panel .subtitle { font-size: 9px; margin-bottom: 10px; }
+    .file-btn { padding: 10px; font-size: 12px; margin-bottom: 8px; }
+    .density-container { padding: 6px 10px; margin-bottom: 8px; }
+    .density-container label { font-size: 10px; }
+    .density-container input { width: 50px; padding: 4px; font-size: 12px; }
+    .trace-btn { padding: 8px; font-size: 12px; margin-bottom: 8px; }
+    .btn-group { gap: 6px; margin-bottom: 8px; }
+    button { padding: 6px 10px; font-size: 10px; }
+    .status-bar { font-size: 10px; margin-top: 8px; padding-top: 8px; }
+
+    /* پنل آمار پایین */
+    .stats-panel {
+      top: auto; bottom: 10px; left: 10px; right: 10px;
+      width: auto; min-width: 0; padding: 12px;
+      border-radius: 12px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
+    }
+    .stats-panel h3 {
+      grid-column: 1 / -1; font-size: 10px; margin-bottom: 4px;
+    }
+    .stats-panel .stat-row { font-size: 10px; padding: 2px 0; }
+    .stats-panel > div[style*="border-top"] {
+      grid-column: 1 / -1; margin-top: 4px; padding-top: 4px;
+      border-top: 1px solid var(--border) !important;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
+    }
+
+    /* مخفی کردن پنل های اضافی در موبایل برای فضای بیشتر */
+    .info-panel, .help-hint { display: none !important; }
+
+    /* توست ها */
+    .toast {
+      font-size: 12px; padding: 10px 20px;
+      width: 80%; max-width: 320px; text-align: center;
+    }
+    .loader-text { font-size: 11px; }
+  }
 </style>
 </head>
 <body>
@@ -367,7 +419,7 @@ scene.add(sensorLight);
 let imageMesh = null;
 let imageDims = { w: 0, h: 0 };
 let imageCanvas = null;
-let currentFileName = 'test-pattern'; // Added to track name for status updates
+let currentFileName = 'test-pattern'; 
 
 function createDefaultTexture() {
   const c = document.createElement('canvas');
@@ -394,7 +446,7 @@ function createDefaultTexture() {
 
 // ============ Groups ============
 const rayGroup = new THREE.Group(); 
-rayGroup.visible = false; // FORCED HIDDEN
+rayGroup.visible = false; 
 scene.add(rayGroup);
 
 const markGroup = new THREE.Group(); scene.add(markGroup);
@@ -466,7 +518,6 @@ function loadImageTexture(texture, canvas, fileName = 'test-pattern') {
   showToast('Image loaded. Adjust settings and click Start Trace.', 'success');
 }
 
-// Separate function to calculate and update image dimensions based on maxSize input
 function updateImageSize() {
     if (!imageCanvas) return;
     
@@ -494,23 +545,20 @@ function updateStatusBar(totalRays, totalHits) {
     `;
 }
 
-// ============ Trace Button Event (Now updates size before tracing) ============
+// ============ Trace Button Event ============
 document.getElementById('startTraceBtn').addEventListener('click', () => {
   if (!imageCanvas) {
     showToast('Please load an image first', 'error');
     return;
   }
   
-  // 1. Update Image Dimensions based on new input
   updateImageSize();
   
-  // 2. Update the 3D Mesh Geometry to the new size
   if (imageMesh) {
     imageMesh.geometry.dispose();
     imageMesh.geometry = new THREE.PlaneGeometry(imageDims.w, imageDims.h);
   }
   
-  // 3. Check density limit
   let density = parseInt(document.getElementById('rayDensity').value);
   if (isNaN(density) || density < 1) density = 1;
   if (density > 18) {
@@ -519,7 +567,6 @@ document.getElementById('startTraceBtn').addEventListener('click', () => {
     showToast("Max density is 18 rays/cm", "error");
   }
   
-  // 4. Start Ray Generation
   generateRays(density);
 });
 
@@ -638,7 +685,7 @@ function generateRays(density) {
       });
       const rayLines = new THREE.LineSegments(rayGeo, rayMat);
       rayGroup.add(rayLines);
-      rayGroup.visible = false; // ABSOLUTELY FORCED HIDDEN
+      rayGroup.visible = false; 
 
       const hitGeo = new THREE.BufferGeometry();
       hitGeo.setAttribute('position', new THREE.Float32BufferAttribute(hitPositions.subarray(0, hitCount * 3), 3));
