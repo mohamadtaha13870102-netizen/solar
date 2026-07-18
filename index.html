@@ -191,13 +191,13 @@
   </div>
   <div class="density-container">
     <label>Rays per cm:</label>
-    <input type="number" id="rayDensity" value="10" min="1" max="25">
+    <input type="number" id="rayDensity" value="10" min="1" max="18">
   </div>
   <button class="trace-btn" id="startTraceBtn">Start Trace Calculation</button>
   
   <div class="btn-group">
     <button id="resetCam">Reset View</button>
-    <button id="toggleRays">Rays</button>
+    <button id="toggleRays" style="opacity: 0.4;">Rays</button>
     <button id="toggleMarks">Marks</button>
   </div>
   <div class="status-bar" id="statusBar">
@@ -367,6 +367,7 @@ scene.add(sensorLight);
 let imageMesh = null;
 let imageDims = { w: 0, h: 0 };
 let imageCanvas = null;
+let currentFileName = 'test-pattern'; // Added to track name for status updates
 
 function createDefaultTexture() {
   const c = document.createElement('canvas');
@@ -374,12 +375,10 @@ function createDefaultTexture() {
   const ctx = c.getContext('2d');
   ctx.clearRect(0, 0, 1000, 1000);
   
-  // Opaque border frame outside the 20x20 area
   ctx.strokeStyle = 'rgba(255, 100, 100, 0.9)';
   ctx.lineWidth = 20;
   ctx.strokeRect(50, 50, 900, 900);
   
-  // Grid pattern
   ctx.strokeStyle = 'rgba(100, 160, 240, 0.5)';
   ctx.lineWidth = 5;
   for (let i = 1; i < 10; i++) {
@@ -394,11 +393,14 @@ function createDefaultTexture() {
 }
 
 // ============ Groups ============
-const rayGroup = new THREE.Group(); scene.add(rayGroup);
+const rayGroup = new THREE.Group(); 
+rayGroup.visible = false; // FORCED HIDDEN
+scene.add(rayGroup);
+
 const markGroup = new THREE.Group(); scene.add(markGroup);
 
 const faceHits = { front: [], back: [], left: [], right: [] };
-let raysVisible = true, marksVisible = true;
+let raysVisible = false, marksVisible = true;
 
 // ============ Toast ============
 const toastEl = document.getElementById('toast');
@@ -441,38 +443,18 @@ function loadImageTexture(texture, canvas, fileName = 'test-pattern') {
     imageMesh.material.dispose();
   }
   
-  const imgW = canvas.width, imgH = canvas.height;
-  const aspect = imgW / imgH;
-  
-  const maxDim = parseFloat(document.getElementById('maxSize').value) || 100;
-  
-  let w, h;
-  if (aspect >= 1) {
-    w = maxDim;
-    h = maxDim / aspect;
-  } else {
-    h = maxDim;
-    w = maxDim * aspect;
-  }
+  currentFileName = fileName;
+  imageCanvas = canvas;
+  updateImageSize();
 
-  const geo = new THREE.PlaneGeometry(w, h);
   const mat = new THREE.MeshBasicMaterial({ 
       map: texture, side: THREE.DoubleSide, 
       transparent: true, alphaTest: 0.01, depthWrite: false 
   });
-  imageMesh = new THREE.Mesh(geo, mat);
+  imageMesh = new THREE.Mesh(new THREE.PlaneGeometry(imageDims.w, imageDims.h), mat);
   imageMesh.rotation.x = -Math.PI / 2;
   imageMesh.position.y = 0.05;
-  imageCanvas = canvas;
-  imageDims = { w, h };
   scene.add(imageMesh);
-
-  document.getElementById('statusBar').innerHTML = `
-    <div><span class="label">Image:</span> <span class="value">${fileName.length > 18 ? fileName.slice(0,15)+'...' : fileName}</span></div>
-    <div><span class="label">Size:</span> <span class="value">${w.toFixed(1)}cm × ${h.toFixed(1)}cm</span></div>
-    <div><span class="label">Rays:</span> <span class="value" id="statusRays">0</span></div>
-    <div><span class="label">Hits:</span> <span class="value" id="statusHits">0</span></div>
-  `;
   
   disposeGroup(rayGroup); 
   disposeGroup(markGroup);
@@ -480,24 +462,64 @@ function loadImageTexture(texture, canvas, fileName = 'test-pattern') {
   document.getElementById('stat-total').textContent = "0";
   document.getElementById('stat-hits').textContent = "0";
   
+  updateStatusBar(0, 0);
   showToast('Image loaded. Adjust settings and click Start Trace.', 'success');
 }
 
-// ============ Trace Button Event ============
+// Separate function to calculate and update image dimensions based on maxSize input
+function updateImageSize() {
+    if (!imageCanvas) return;
+    
+    const aspect = imageCanvas.width / imageCanvas.height;
+    const maxDim = parseFloat(document.getElementById('maxSize').value) || 100;
+    
+    if (aspect >= 1) {
+      imageDims.w = maxDim;
+      imageDims.h = maxDim / aspect;
+    } else {
+      imageDims.h = maxDim;
+      imageDims.w = maxDim * aspect;
+    }
+}
+
+function updateStatusBar(totalRays, totalHits) {
+    const displaySize = imageCanvas ? `${imageDims.w.toFixed(1)}cm × ${imageDims.h.toFixed(1)}cm` : '— × —';
+    const displayName = currentFileName.length > 18 ? currentFileName.slice(0,15)+'...' : currentFileName;
+    
+    document.getElementById('statusBar').innerHTML = `
+      <div><span class="label">Image:</span> <span class="value">${displayName}</span></div>
+      <div><span class="label">Size:</span> <span class="value">${displaySize}</span></div>
+      <div><span class="label">Rays:</span> <span class="value" id="statusRays">${totalRays.toLocaleString()}</span></div>
+      <div><span class="label">Hits:</span> <span class="value" id="statusHits">${totalHits.toLocaleString()}</span></div>
+    `;
+}
+
+// ============ Trace Button Event (Now updates size before tracing) ============
 document.getElementById('startTraceBtn').addEventListener('click', () => {
-  if (!imageMesh) {
+  if (!imageCanvas) {
     showToast('Please load an image first', 'error');
     return;
   }
   
-  let density = parseInt(document.getElementById('rayDensity').value);
-  if (isNaN(density) || density < 1) density = 1;
-  if (density > 25) {
-    density = 25;
-    document.getElementById('rayDensity').value = 25;
-    showToast("Max density is 25 rays/cm", "error");
+  // 1. Update Image Dimensions based on new input
+  updateImageSize();
+  
+  // 2. Update the 3D Mesh Geometry to the new size
+  if (imageMesh) {
+    imageMesh.geometry.dispose();
+    imageMesh.geometry = new THREE.PlaneGeometry(imageDims.w, imageDims.h);
   }
   
+  // 3. Check density limit
+  let density = parseInt(document.getElementById('rayDensity').value);
+  if (isNaN(density) || density < 1) density = 1;
+  if (density > 18) {
+    density = 18;
+    document.getElementById('rayDensity').value = 18;
+    showToast("Max density is 18 rays/cm", "error");
+  }
+  
+  // 4. Start Ray Generation
   generateRays(density);
 });
 
@@ -525,13 +547,14 @@ function generateRays(density) {
       const stepPxX = imageCanvas.width / numX;
       const stepPxY = imageCanvas.height / numZ;
 
-      const rayPositions = [];
-      const hitPositions = [];
+      const maxRays = numX * numZ;
+      const rayPositions = new Float32Array(maxRays * 6);
+      const hitPositions = new Float32Array(maxRays * 3);
+      let rayCount = 0;
+      let hitCount = 0;
       
       const sensorX = 0, sensorY = 10, sensorZ = 0;
       const startY = 0.08;
-
-      let totalRays = 0, totalHits = 0;
 
       for(let i=0; i<numX; i++) {
         const px = Math.floor(i * stepPxX);
@@ -548,8 +571,10 @@ function generateRays(density) {
 
           if (alpha > 128 && (Math.abs(sx) > 10.01 || Math.abs(sz) > 10.01)) {
             
-            rayPositions.push(sx, startY, sz, sensorX, sensorY, sensorZ);
-            totalRays++;
+            const rIdx = rayCount * 6;
+            rayPositions[rIdx] = sx; rayPositions[rIdx+1] = startY; rayPositions[rIdx+2] = sz;
+            rayPositions[rIdx+3] = sensorX; rayPositions[rIdx+4] = sensorY; rayPositions[rIdx+5] = sensorZ;
+            rayCount++;
 
             const dirX = sensorX - sx;
             const dirY = sensorY - startY;
@@ -563,7 +588,7 @@ function generateRays(density) {
               if (t > 0.001 && t < bestT) {
                 const hx = sx + dirX * t;
                 const hy = startY + dirY * t;
-                if (Math.abs(hx) <= 10 && hy <= 10) {
+                if (Math.abs(hx) <= 10 && hy >= 0 && hy <= 10) {
                   bestT = t; hitFace = 'front'; hitU = hx; hitV = hy; hitX = hx; hitY = hy; hitZ = 10;
                 }
               }
@@ -571,7 +596,7 @@ function generateRays(density) {
               if (t2 > 0.001 && t2 < bestT) {
                 const hx = sx + dirX * t2;
                 const hy = startY + dirY * t2;
-                if (Math.abs(hx) <= 10 && hy <= 10) {
+                if (Math.abs(hx) <= 10 && hy >= 0 && hy <= 10) {
                   bestT = t2; hitFace = 'back'; hitU = hx; hitV = hy; hitX = hx; hitY = hy; hitZ = -10;
                 }
               }
@@ -581,7 +606,7 @@ function generateRays(density) {
               if (t > 0.001 && t < bestT) {
                 const hz = sz + dirZ * t;
                 const hy = startY + dirY * t;
-                if (Math.abs(hz) <= 10 && hy <= 10) {
+                if (Math.abs(hz) <= 10 && hy >= 0 && hy <= 10) {
                   bestT = t; hitFace = 'right'; hitU = hz; hitV = hy; hitX = 10; hitY = hy; hitZ = hz;
                 }
               }
@@ -589,32 +614,34 @@ function generateRays(density) {
               if (t2 > 0.001 && t2 < bestT) {
                 const hz = sz + dirZ * t2;
                 const hy = startY + dirY * t2;
-                if (Math.abs(hz) <= 10 && hy <= 10) {
+                if (Math.abs(hz) <= 10 && hy >= 0 && hy <= 10) {
                   bestT = t2; hitFace = 'left'; hitU = hz; hitV = hy; hitX = -10; hitY = hy; hitZ = hz;
                 }
               }
             }
 
             if (hitFace) {
-              hitPositions.push(hitX, hitY, hitZ);
+              const hIdx = hitCount * 3;
+              hitPositions[hIdx] = hitX; hitPositions[hIdx+1] = hitY; hitPositions[hIdx+2] = hitZ;
+              hitCount++;
               faceHits[hitFace].push(hitU, hitV);
-              totalHits++;
             }
           }
         }
       }
 
       const rayGeo = new THREE.BufferGeometry();
-      rayGeo.setAttribute('position', new THREE.Float32BufferAttribute(rayPositions, 3));
+      rayGeo.setAttribute('position', new THREE.Float32BufferAttribute(rayPositions.subarray(0, rayCount * 6), 3));
       const rayMat = new THREE.LineBasicMaterial({
         color: 0xffaa00, transparent: true, opacity: 0.04, 
         blending: THREE.AdditiveBlending, depthWrite: false
       });
       const rayLines = new THREE.LineSegments(rayGeo, rayMat);
       rayGroup.add(rayLines);
+      rayGroup.visible = false; // ABSOLUTELY FORCED HIDDEN
 
       const hitGeo = new THREE.BufferGeometry();
-      hitGeo.setAttribute('position', new THREE.Float32BufferAttribute(hitPositions, 3));
+      hitGeo.setAttribute('position', new THREE.Float32BufferAttribute(hitPositions.subarray(0, hitCount * 3), 3));
       const hitMat = new THREE.PointsMaterial({
         color: 0xcc44ff, size: 0.15, sizeAttenuation: true,
         transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false
@@ -626,15 +653,12 @@ function generateRays(density) {
       document.getElementById('stat-back').textContent = (faceHits.back.length / 2).toLocaleString();
       document.getElementById('stat-left').textContent = (faceHits.left.length / 2).toLocaleString();
       document.getElementById('stat-right').textContent = (faceHits.right.length / 2).toLocaleString();
-      document.getElementById('stat-total').textContent = totalRays.toLocaleString();
-      document.getElementById('stat-hits').textContent = totalHits.toLocaleString();
+      document.getElementById('stat-total').textContent = rayCount.toLocaleString();
+      document.getElementById('stat-hits').textContent = hitCount.toLocaleString();
       
-      const sr = document.getElementById('statusRays');
-      if (sr) sr.textContent = totalRays.toLocaleString();
-      const sh = document.getElementById('statusHits');
-      if (sh) sh.textContent = totalHits.toLocaleString();
+      updateStatusBar(rayCount, hitCount);
 
-      showToast(`Trace complete: ${totalRays.toLocaleString()} rays`, 'success');
+      showToast(`Trace complete: ${rayCount.toLocaleString()} rays`, 'success');
     } catch(e) {
       console.error(e);
       showToast("Error during tracing. Try lower density.", "error");
@@ -706,39 +730,31 @@ function exportFaceAsSVG(face) {
 
   showToast(`Generating Vector SVG for ${name.toUpperCase()}...`, 'info');
 
-  // The SVG dimensions are exactly the face size (20cm x 10cm)
-  // 1 unit in SVG = 1 cm.
-  const W = BOX_SIZE;  // 20
-  const H = BOX_HEIGHT; // 10
+  const pad = 0.1; 
+  const vbW = 20 + pad * 2;
+  const vbH = 10 + pad * 2;
+  const scale = 50; 
+  const pxW = vbW * scale;
+  const pxH = vbH * scale;
   
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W * 50}" height="${H * 50}" viewBox="0 0 ${W} ${H}">`;
+  const parts = [];
+  parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${pxW}" height="${pxH}" viewBox="${-pad} ${-pad} ${vbW} ${vbH}" overflow="hidden">`);
+  parts.push(`<rect x="0" y="0" width="20" height="10" fill="none" stroke="#4a90e2" stroke-width="0.05"/>`);
   
-  // 1. Face Boundary Only
-  svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="none" stroke="rgba(120, 180, 240, 0.5)" stroke-width="0.05"/>`;
-  
-  // 2. Pure Vector Hit Points
   if (hitCount > 0) {
-    let dotPath = "";
-    const r = 0.05; // 0.5mm radius equivalent
-    for(let i=0; i<uvArray.length; i+=2) {
-        const u = uvArray[i];
-        const v = uvArray[i+1];
-        
-        // Map coordinates to SVG space (0 to 20, 0 to 10)
-        const x = u + 10;          // map [-10, 10] to [0, 20]
-        const y = 10 - v;          // map [0, 10] to [10, 0] (invert Y for SVG screen coords)
-        
-        // Generate a tiny square path for each hit
-        dotPath += `M${(x - r).toFixed(2)} ${(y - r).toFixed(2)} h${(r*2).toFixed(2)} v${(r*2).toFixed(2)} h${-(r*2).toFixed(2)}z `;
+    parts.push(`<path d="`);
+    for (let i = 0; i < uvArray.length; i += 2) {
+      const u = uvArray[i];
+      const v = uvArray[i + 1];
+      const x = (u + 10).toFixed(2);
+      const y = (10 - v).toFixed(2);
+      parts.push(`M${x} ${y}h.1v.1h-.1z`);
     }
-    // Pure purple fill, no opacity so it's solid vector art
-    svg += `<path d="${dotPath}" fill="#cc44ff" />`;
+    parts.push(`" fill="#cc44ff" />`);
   }
-  
-  svg += `</svg>`;
+  parts.push(`</svg>`);
 
-  // Trigger Download
-  const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+  const blob = new Blob(parts, { type: "image/svg+xml;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
