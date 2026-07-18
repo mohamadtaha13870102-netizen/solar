@@ -100,6 +100,9 @@
   }
   button:hover { background: rgba(74, 158, 255, 0.2); border-color: var(--accent); color: white; }
   button:active { transform: scale(0.96); }
+  button.active-test { background: var(--amber); border-color: var(--amber); color: #000; }
+  button:disabled { opacity: 0.2; cursor: not-allowed; }
+  
   .btn-group { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
   
   .status-bar {
@@ -116,7 +119,6 @@
   .stat-value { color: var(--text); font-weight: 600; min-width: 40px; text-align: right; }
   .stat-value.highlight { color: var(--purple); }
   
-  /* D-Pad Move Controls */
   .dpad-container {
     position: fixed; bottom: 20px; left: 50%; z-index: 150;
     transform: translateX(-50%);
@@ -205,9 +207,10 @@
   
   <div class="btn-group">
     <button id="resetCam">Reset View</button>
-    <button id="rotateBtn">Rotate Box 90°</button>
+    <button id="rotateBtn">Rotate Box</button>
     <button id="toggleRays" style="opacity: 0.4;">Rays</button>
     <button id="toggleMarks">Marks</button>
+    <button id="testBtn">Test</button>
   </div>
 
   <div class="status-bar" id="statusBar">
@@ -264,9 +267,9 @@ let HALF_X = BOX_X / 2;
 let HALF_Z = BOX_Z / 2;
 const HALF_Y = BOX_Y / 2;
 const WALL_SIZE = 300;
-const TILE_DIV = WALL_SIZE / 10; // 30 divisions
-const TILE_SIZE = WALL_SIZE / TILE_DIV; // 10 units per tile
-const MOVE_STEP = TILE_SIZE / 4; // 2.5 units (half tile)
+const TILE_DIV = WALL_SIZE / 10;
+const TILE_SIZE = WALL_SIZE / TILE_DIV;
+const MOVE_STEP = TILE_SIZE / 4;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x07080d);
@@ -281,6 +284,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -289,13 +294,13 @@ controls.enableDamping = true; controls.dampingFactor = 0.08;
 controls.minDistance = 20; controls.maxDistance = 300;
 controls.maxPolarAngle = Math.PI / 2 - 0.02;
 
-scene.add(new THREE.AmbientLight(0x4a4a60, 1.0));
+const ambientLight = new THREE.AmbientLight(0x4a4a60, 1.0); scene.add(ambientLight);
 const keyLight = new THREE.DirectionalLight(0xffffff, 1.5); keyLight.position.set(40, 60, 30); scene.add(keyLight);
 const fillLight = new THREE.DirectionalLight(0x6088ff, 0.6); fillLight.position.set(-30, 20, -20); scene.add(fillLight);
 
 const wallGeo = new THREE.PlaneGeometry(WALL_SIZE, WALL_SIZE);
 const wallMat = new THREE.MeshStandardMaterial({ color: 0x12141e, roughness: 0.95, metalness: 0.05 });
-const wall = new THREE.Mesh(wallGeo, wallMat); wall.rotation.x = -Math.PI / 2; scene.add(wall);
+const wall = new THREE.Mesh(wallGeo, wallMat); wall.rotation.x = -Math.PI / 2; wall.receiveShadow = true; scene.add(wall);
 
 const grid = new THREE.GridHelper(WALL_SIZE, TILE_DIV, 0x2a3458, 0x161a28);
 grid.position.y = 0.01; grid.material.transparent = true; grid.material.opacity = 0.6; scene.add(grid);
@@ -311,27 +316,12 @@ function buildCuboid() {
     cuboidParts = []; faces = [];
     HALF_X = BOX_X / 2; HALF_Z = BOX_Z / 2;
 
+    // پایه مکعب (فقط یک مستطیل تیره روی زمین)
     const footprintGeo = new THREE.PlaneGeometry(BOX_X, BOX_Z);
     const footprintMat = new THREE.MeshBasicMaterial({ color: 0x0a0d15, transparent: true, opacity: 0.8 });
     const footprint = new THREE.Mesh(footprintGeo, footprintMat); footprint.rotation.x = -Math.PI / 2; footprint.position.y = 0.02; boxGroup.add(footprint); cuboidParts.push(footprint);
 
-    const frameMat = new THREE.MeshStandardMaterial({ color: 0x5080c0, roughness: 0.25, metalness: 0.85, emissive: 0x0a1830, emissiveIntensity: 0.4 });
-    const FT = 0.5, FY = 0.5;
-    function addFrameBar(w, h, d, x, y, z) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), frameMat); m.position.set(x, y, z); boxGroup.add(m); cuboidParts.push(m); }
-    addFrameBar(BOX_X + FT*2, FY, FT, 0, BOX_Y + FY/2, HALF_Z + FT/2);
-    addFrameBar(BOX_X + FT*2, FY, FT, 0, BOX_Y + FY/2, -HALF_Z - FT/2);
-    addFrameBar(FT, FY, BOX_Z, HALF_X + FT/2, BOX_Y + FY/2, 0);
-    addFrameBar(FT, FY, BOX_Z, -HALF_X - FT/2, BOX_Y + FY/2, 0);
-    addFrameBar(BOX_X + FT*2, FY, FT, 0, FY/2, HALF_Z + FT/2);
-    addFrameBar(BOX_X + FT*2, FY, FT, 0, FY/2, -HALF_Z - FT/2);
-    addFrameBar(FT, FY, BOX_Z, HALF_X + FT/2, FY/2, 0);
-    addFrameBar(FT, FY, BOX_Z, -HALF_X - FT/2, FY/2, 0);
-    
-    const postMat = new THREE.MeshStandardMaterial({ color: 0x404858, roughness: 0.4, metalness: 0.6 });
-    [[-HALF_X-FT/2,-HALF_Z-FT/2],[HALF_X+FT/2,-HALF_Z-FT/2],[-HALF_X-FT/2,HALF_Z+FT/2],[HALF_X+FT/2,HALF_Z+FT/2]].forEach(([x,z])=>{
-      const p = new THREE.Mesh(new THREE.BoxGeometry(FT, BOX_Y, FT), postMat); p.position.set(x, BOX_Y/2, z); boxGroup.add(p); cuboidParts.push(p);
-    });
-
+    // صفحات شفاف جانبی (بدون هیچ فریم یا چارچوب ضخیم)
     const faceDefs = [
       { name: 'front', label: 'FRONT', pos: [0, HALF_Y, HALF_Z],  rotY: 0,           uSize: BOX_X, vSize: BOX_Y },
       { name: 'back',  label: 'BACK',  pos: [0, HALF_Y, -HALF_Z], rotY: Math.PI,     uSize: BOX_X, vSize: BOX_Y },
@@ -342,6 +332,7 @@ function buildCuboid() {
       const geo = new THREE.PlaneGeometry(def.uSize, def.vSize);
       const mat = new THREE.MeshStandardMaterial({ color: 0x4a90e2, side: THREE.DoubleSide, transparent: true, opacity: 0.12, roughness: 0.2, metalness: 0.3 });
       const mesh = new THREE.Mesh(geo, mat); mesh.position.set(...def.pos); mesh.rotation.y = def.rotY; mesh.userData = { ...def, isFace: true };
+      mesh.receiveShadow = false; 
       boxGroup.add(mesh); cuboidParts.push(mesh); faces.push(mesh);
     });
 }
@@ -354,10 +345,18 @@ const glow1 = new THREE.Mesh(new THREE.SphereGeometry(2.5, 32, 32), new THREE.Me
 glow1.position.copy(sensor.position); boxGroup.add(glow1);
 
 const sensorLight = new THREE.PointLight(0xff4466, 2.0, 40);
-sensorLight.position.copy(sensor.position); boxGroup.add(sensorLight);
+sensorLight.position.copy(sensor.position); 
+sensorLight.castShadow = true; 
+sensorLight.shadow.mapSize.set(2048, 2048);
+sensorLight.shadow.bias = -0.001;
+sensorLight.shadow.camera.near = 0.5;
+sensorLight.shadow.camera.far = 500;
+boxGroup.add(sensorLight);
 
 let imageMesh = null; let imageDims = { w: 0, h: 0 }; let imageCanvas = null; let currentFileName = 'test-pattern'; 
 let hasTraced = false;
+let hitBlockerMesh = null; 
+let testMode = false;
 
 function createDefaultTexture() {
   const c = document.createElement('canvas'); c.width = 1000; c.height = 1000;
@@ -402,6 +401,7 @@ function loadImageTexture(texture, canvas, fileName = 'test-pattern') {
   imageMesh = new THREE.Mesh(new THREE.PlaneGeometry(imageDims.w, imageDims.h), mat);
   imageMesh.rotation.x = -Math.PI / 2; imageMesh.position.y = 0.05; scene.add(imageMesh);
   disposeGroup(rayGroup); disposeGroup(markGroup);
+  if (hitBlockerMesh) { scene.remove(hitBlockerMesh); hitBlockerMesh.geometry.dispose(); hitBlockerMesh.material.dispose(); hitBlockerMesh = null; }
   Object.keys(faceHits).forEach(k => faceHits[k] = []);
   document.getElementById('stat-total').textContent = "0"; document.getElementById('stat-hits').textContent = "0";
   updateStatusBar(0, 0);
@@ -471,6 +471,103 @@ document.getElementById('moveCenter').addEventListener('click', () => {
     }
 });
 
+// ============ Test Mode Logic ============
+function applyTestModeVisuals(isTest) {
+    if (isTest) {
+        if (imageMesh) imageMesh.visible = false;
+        ambientLight.intensity = 0;
+        keyLight.intensity = 0;
+        fillLight.intensity = 0;
+
+        // نور دایره‌ای با شعاع ۴۰۰ (قطر ۸۰۰)
+        sensorLight.color.setHex(0xffdd00);
+        sensorLight.intensity = 500;
+        sensorLight.distance = 800; 
+        sensorLight.decay = 1; 
+        sensor.material.emissive.setHex(0xffdd00);
+        sensor.material.emissiveIntensity = 3.0;
+
+        raysVisible = false; rayGroup.visible = false;
+        document.getElementById('toggleRays').style.opacity = '0.4';
+        document.getElementById('toggleRays').disabled = true;
+
+        marksVisible = false; markGroup.visible = false;
+        document.getElementById('toggleMarks').style.opacity = '0.4';
+        document.getElementById('toggleMarks').disabled = true;
+
+        faces.forEach(f => {
+            f.material.opacity = 0.0; 
+            f.material.color.setHex(0x000000);
+            f.material.emissive.setHex(0x000000);
+            f.castShadow = false;
+            f.receiveShadow = false;
+        });
+
+        wall.material.color.setHex(0xffffff);
+        wall.material.roughness = 1.0;
+        wall.material.metalness = 0.0;
+        wall.receiveShadow = true;
+
+        grid.visible = false;
+    } else {
+        if (imageMesh) imageMesh.visible = true;
+        ambientLight.intensity = 1.0;
+        keyLight.intensity = 1.5;
+        fillLight.intensity = 0.6;
+
+        sensorLight.color.setHex(0xff4466);
+        sensorLight.intensity = 2.0;
+        sensorLight.distance = 40;
+        sensorLight.decay = 2.0;
+        sensor.material.emissive.setHex(0xdd0033);
+
+        document.getElementById('toggleRays').disabled = false;
+        document.getElementById('toggleMarks').disabled = false;
+
+        faces.forEach(f => {
+            f.material.opacity = 0.12;
+            f.material.color.setHex(0x4a90e2);
+            f.material.emissive.setHex(0x000000);
+            f.receiveShadow = false;
+        });
+
+        wall.material.color.setHex(0x12141e);
+        wall.material.roughness = 0.95;
+        wall.material.metalness = 0.05;
+        wall.receiveShadow = true;
+
+        grid.visible = true;
+    }
+}
+
+document.getElementById('testBtn').addEventListener('click', (e) => {
+    testMode = !testMode;
+    e.target.classList.toggle('active-test', testMode);
+
+    if (testMode) {
+        // اگر هنوز رهگیری انجام نشده بود، اول رهگیری کن بعد تست را فعال کن
+        if (!hasTraced) {
+            if (!imageCanvas) {
+                showToast('Please load an image first', 'error');
+                testMode = false;
+                e.target.classList.remove('active-test');
+                return;
+            }
+            let density = parseInt(document.getElementById('rayDensity').value) || 10;
+            if (density > 18) density = 18;
+            
+            applyTestModeVisuals(true);
+            generateRays(density);
+        } else {
+            applyTestModeVisuals(true);
+            if (hitBlockerMesh) hitBlockerMesh.visible = true;
+        }
+    } else {
+        applyTestModeVisuals(false);
+        if (hitBlockerMesh) hitBlockerMesh.visible = false;
+    }
+});
+
 let isUIHidden = false;
 const eyeToggle = document.getElementById('eyeToggle');
 const eyeOpenSVG = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
@@ -484,6 +581,7 @@ eyeToggle.addEventListener('click', () => {
 
 function generateRays(density) {
   disposeGroup(rayGroup); disposeGroup(markGroup);
+  if (hitBlockerMesh) { scene.remove(hitBlockerMesh); hitBlockerMesh.geometry.dispose(); hitBlockerMesh.material.dispose(); hitBlockerMesh = null; }
   Object.keys(faceHits).forEach(k => faceHits[k] = []);
   document.getElementById('loader').classList.remove('hidden');
   document.getElementById('loader').querySelector('.loader-text').textContent = `TRACING ${density} RAYS/CM...`;
@@ -583,6 +681,22 @@ function generateRays(density) {
       markGroup.add(hitPoints);
       markGroup.visible = marksVisible;
 
+      // ایجاد سدهای فیزیکی برای حالت تست
+      if (hitCount > 0) {
+          const blockerGeo = new THREE.SphereGeometry(0.05, 8, 8); 
+          const blockerMat = new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.1, metalness: 0.0, transparent: false, opacity: 1.0 });
+          hitBlockerMesh = new THREE.InstancedMesh(blockerGeo, blockerMat, hitCount);
+          hitBlockerMesh.castShadow = true;
+          hitBlockerMesh.visible = testMode; 
+          const dummy = new THREE.Object3D();
+          for (let i = 0; i < hitCount; i++) {
+              dummy.position.set(hitPositions[i * 3], hitPositions[i * 3 + 1], hitPositions[i * 3 + 2]);
+              dummy.updateMatrix();
+              hitBlockerMesh.setMatrixAt(i, dummy.matrix);
+          }
+          scene.add(hitBlockerMesh);
+      }
+
       document.getElementById('stat-front').textContent = (faceHits.front.length / 2).toLocaleString();
       document.getElementById('stat-back').textContent = (faceHits.back.length / 2).toLocaleString();
       document.getElementById('stat-left').textContent = (faceHits.left.length / 2).toLocaleString();
@@ -617,9 +731,9 @@ renderer.domElement.addEventListener('mousemove', (e) => {
   const hits = raycaster.intersectObjects(faces);
   if (hits.length > 0) {
     const f = hits[0].object;
-    if (hoveredFace !== f) { if (hoveredFace) { hoveredFace.material.opacity = 0.12; } hoveredFace = f; f.material.opacity = 0.3; renderer.domElement.style.cursor = 'pointer'; }
+    if (hoveredFace !== f) { if (hoveredFace) { hoveredFace.material.opacity = testMode ? 0.0 : 0.12; } hoveredFace = f; f.material.opacity = 0.3; renderer.domElement.style.cursor = 'pointer'; }
   } else {
-    if (hoveredFace) { hoveredFace.material.opacity = 0.12; hoveredFace = null; renderer.domElement.style.cursor = 'default'; }
+    if (hoveredFace) { hoveredFace.material.opacity = testMode ? 0.0 : 0.12; hoveredFace = null; renderer.domElement.style.cursor = 'default'; }
   }
 });
 
@@ -695,7 +809,16 @@ let time = 0;
 function animate() {
   requestAnimationFrame(animate); time += 0.016; controls.update();
   const pulse = 1 + Math.sin(time * 2.5) * 0.08;
-  glow1.scale.setScalar(pulse); sensor.material.emissiveIntensity = 0.9 + Math.sin(time * 3) * 0.2; sensorLight.intensity = 1.8 + Math.sin(time * 3) * 0.4;
+  glow1.scale.setScalar(pulse); 
+  
+  if (testMode) {
+    sensor.material.emissiveIntensity = 3.0;
+    sensorLight.intensity = 500;
+  } else {
+    sensor.material.emissiveIntensity = 0.9 + Math.sin(time * 3) * 0.2;
+    sensorLight.intensity = 1.8 + Math.sin(time * 3) * 0.4;
+  }
+  
   renderer.render(scene, camera);
 }
 
