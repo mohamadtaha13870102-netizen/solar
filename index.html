@@ -31,23 +31,16 @@
   }
   canvas { display: block; }
   
-  /* Utility for fading out UI elements */
-  .ui-element {
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
+  .ui-element { transition: opacity 0.3s ease, transform 0.3s ease; }
   body.hide-ui .ui-element {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transform: scale(0.95) !important;
+    opacity: 0 !important; pointer-events: none !important; transform: scale(0.95) !important;
   }
 
   .panel {
     position: fixed; z-index: 10;
-    background: var(--panel);
-    backdrop-filter: blur(18px) saturate(1.3);
+    background: var(--panel); backdrop-filter: blur(18px) saturate(1.3);
     -webkit-backdrop-filter: blur(18px) saturate(1.3);
-    border: 1px solid var(--border);
-    border-radius: 14px;
+    border: 1px solid var(--border); border-radius: 14px;
     box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
   }
   .control-panel { top: 20px; left: 20px; padding: 20px 22px; min-width: 320px; max-width: 360px; }
@@ -62,8 +55,7 @@
     font-family: 'JetBrains Mono', monospace; letter-spacing: 1px;
   }
   .file-btn {
-    position: relative; display: block; width: 100%;
-    padding: 12px 16px;
+    position: relative; display: block; width: 100%; padding: 12px 16px;
     background: linear-gradient(135deg, var(--amber), #e89530);
     color: #1a1208; border-radius: 8px; cursor: pointer;
     text-align: center; font-size: 13px; font-weight: 600;
@@ -73,8 +65,7 @@
   }
   .file-btn:hover {
     background: linear-gradient(135deg, #ffc866, var(--amber));
-    transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(255, 184, 74, 0.35);
+    transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255, 184, 74, 0.35);
   }
   .file-btn input { position: absolute; left: -9999px; }
   
@@ -83,15 +74,11 @@
     background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;
     border: 1px solid var(--border);
   }
-  .density-container label {
-    font-size: 11px; color: var(--text-mid); flex: 1;
-    font-family: 'JetBrains Mono', monospace;
-  }
+  .density-container label { font-size: 11px; color: var(--text-mid); flex: 1; font-family: 'JetBrains Mono', monospace; }
   .density-container input {
     width: 70px; padding: 6px; background: rgba(255,255,255,0.05);
     border: 1px solid var(--border-hi); color: var(--text);
-    border-radius: 4px; text-align: center; font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
+    border-radius: 4px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px;
   }
   .trace-btn {
     width: 100%; padding: 10px;
@@ -101,10 +88,7 @@
     font-size: 13px; letter-spacing: 0.5px; margin-bottom: 10px;
     transition: all 0.2s ease;
   }
-  .trace-btn:hover {
-    background: linear-gradient(135deg, #d658ff, var(--purple));
-    box-shadow: 0 4px 20px rgba(204, 68, 255, 0.35);
-  }
+  .trace-btn:hover { background: linear-gradient(135deg, #d658ff, var(--purple)); box-shadow: 0 4px 20px rgba(204, 68, 255, 0.35); }
   .trace-btn:active { transform: scale(0.98); }
   
   button {
@@ -118,32 +102,20 @@
   button:active { transform: scale(0.96); }
   .btn-group { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
   .status-bar {
-    font-size: 11px; color: var(--text-mid);
-    margin-top: 10px; padding-top: 10px;
-    border-top: 1px solid var(--border);
-    font-family: 'JetBrains Mono', monospace; line-height: 1.7;
+    font-size: 11px; color: var(--text-mid); margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; line-height: 1.7;
   }
   .status-bar .label { color: var(--text-dim); }
   .status-bar .value { color: var(--amber); }
   
   .stats-panel { top: 20px; right: 20px; padding: 16px 20px; min-width: 220px; }
-  .stats-panel h3 {
-    font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
-    color: var(--text-dim); text-transform: uppercase;
-    margin-bottom: 12px; font-family: 'JetBrains Mono', monospace;
-  }
-  .stat-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 4px 0; font-size: 12px; font-family: 'JetBrains Mono', monospace;
-  }
+  .stats-panel h3 { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+  .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
   .stat-label { color: var(--text-mid); }
   .stat-value { color: var(--text); font-weight: 600; min-width: 40px; text-align: right; }
   .stat-value.highlight { color: var(--purple); }
   
-  .info-panel {
-    bottom: 20px; left: 20px; padding: 14px 18px; max-width: 380px;
-    font-size: 12px; line-height: 1.7; color: var(--text-mid);
-  }
+  .info-panel { bottom: 20px; left: 20px; padding: 14px 18px; max-width: 380px; font-size: 12px; line-height: 1.7; color: var(--text-mid); }
   .info-panel strong { color: var(--amber); font-weight: 600; }
   
   .help-hint {
@@ -153,43 +125,24 @@
     font-size: 10px; color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace; line-height: 1.7;
   }
-  .help-hint .key {
-    display: inline-block; padding: 1px 5px;
-    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-    border-radius: 3px; color: var(--text); margin: 0 2px;
-  }
+  .help-hint .key { display: inline-block; padding: 1px 5px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 3px; color: var(--text); margin: 0 2px; }
   
-  /* Eye Toggle Button - NO ui-element class here! */
   .eye-toggle {
     position: fixed; bottom: 20px; right: 20px; z-index: 150;
-    width: 48px; height: 48px;
-    background: var(--panel); backdrop-filter: blur(12px);
-    border: 1px solid var(--border-hi);
-    border-radius: 50%;
+    width: 48px; height: 48px; background: var(--panel); backdrop-filter: blur(12px);
+    border: 1px solid var(--border-hi); border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: var(--text);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    cursor: pointer; color: var(--text); box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     transition: transform 0.2s ease, background 0.2s ease;
   }
-  .eye-toggle:hover {
-    transform: scale(1.1);
-    background: rgba(74, 158, 255, 0.2);
-  }
-  .eye-toggle svg {
-    width: 24px; height: 24px;
-    stroke: var(--text); stroke-width: 2;
-    fill: none; stroke-linecap: round; stroke-linejoin: round;
-  }
+  .eye-toggle:hover { transform: scale(1.1); background: rgba(74, 158, 255, 0.2); }
+  .eye-toggle svg { width: 24px; height: 24px; stroke: var(--text); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 
   .toast {
-    position: fixed; top: 50%; left: 50%;
-    transform: translate(-50%, -50%) translateY(30px);
-    background: var(--panel); backdrop-filter: blur(16px);
-    padding: 14px 28px; border-radius: 10px;
-    border: 1px solid var(--border-hi);
-    color: var(--text); font-size: 14px; font-weight: 500;
-    opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: none; z-index: 100;
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) translateY(30px);
+    background: var(--panel); backdrop-filter: blur(16px); padding: 14px 28px; border-radius: 10px;
+    border: 1px solid var(--border-hi); color: var(--text); font-size: 14px; font-weight: 500;
+    opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; z-index: 100;
     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
   }
   .toast.show { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
@@ -197,30 +150,14 @@
   .toast.error { border-color: var(--danger); }
   .toast.info { border-color: var(--accent); }
   
-  #loader {
-    position: fixed; inset: 0; background: var(--bg); z-index: 200;
-    display: flex; align-items: center; justify-content: center;
-    transition: opacity 0.6s;
-  }
+  #loader { position: fixed; inset: 0; background: var(--bg); z-index: 200; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s; }
   #loader.hidden { opacity: 0; pointer-events: none; }
-  .loader-text {
-    font-size: 13px; color: var(--text-dim);
-    font-family: 'JetBrains Mono', monospace; letter-spacing: 2px;
-    animation: pulse 1.5s ease-in-out infinite;
-  }
+  .loader-text { font-size: 13px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; letter-spacing: 2px; animation: pulse 1.5s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-  /* =========================================
-     موبایل و تبلت (رسپانسیو فشرده)
-     ========================================= */
   @media only screen and (max-width: 768px) {
     .panel { backdrop-filter: blur(10px); }
-    
-    .control-panel {
-      top: 10px; left: 10px; right: 10px;
-      width: auto; max-width: none; padding: 10px 12px;
-      border-radius: 12px;
-    }
+    .control-panel { top: 10px; left: 10px; right: 10px; width: auto; max-width: none; padding: 10px 12px; border-radius: 12px; }
     .control-panel h1 { font-size: 14px; margin-bottom: 2px; }
     .control-panel .subtitle { font-size: 8px; margin-bottom: 6px; }
     .file-btn { padding: 8px; font-size: 11px; margin-bottom: 6px; }
@@ -231,16 +168,10 @@
     .btn-group { gap: 4px; margin-bottom: 6px; }
     button { padding: 5px 8px; font-size: 9px; }
     .status-bar { font-size: 9px; margin-top: 6px; padding-top: 6px; line-height: 1.4; }
-    
     .status-image, .status-rays, .status-hits { display: none !important; }
-
     .stats-panel { display: none !important; }
     .info-panel, .help-hint { display: none !important; }
-
-    .toast {
-      font-size: 12px; padding: 10px 20px;
-      width: 80%; max-width: 320px; text-align: center;
-    }
+    .toast { font-size: 12px; padding: 10px 20px; width: 80%; max-width: 320px; text-align: center; }
     .loader-text { font-size: 11px; }
   }
 </style>
@@ -302,7 +233,6 @@
   <span class="key">Drag</span> orbit · <span class="key">Scroll</span> zoom · <span class="key">Click face</span> export SVG
 </div>
 
-<!-- Eye Toggle Button (Does not hide) -->
 <div class="eye-toggle" id="eyeToggle" title="Hide/Show UI">
   <svg viewBox="0 0 24 24">
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -324,7 +254,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-// ============ Configuration ============
 let BOX_X = 15;  
 let BOX_Z = 10;  
 const BOX_Y = 10;  
@@ -333,7 +262,6 @@ let HALF_Z = BOX_Z / 2;
 const HALF_Y = BOX_Y / 2;
 const WALL_SIZE = 300;
 
-// ============ Scene Setup ============
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x07080d);
 
@@ -351,66 +279,36 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.copy(defaultCamTarget);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.minDistance = 20;
-controls.maxDistance = 300;
+controls.enableDamping = true; controls.dampingFactor = 0.08;
+controls.minDistance = 20; controls.maxDistance = 300;
 controls.maxPolarAngle = Math.PI / 2 - 0.02;
 
-// ============ Lighting ============
 scene.add(new THREE.AmbientLight(0x4a4a60, 1.0));
-const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
-keyLight.position.set(40, 60, 30);
-scene.add(keyLight);
-const fillLight = new THREE.DirectionalLight(0x6088ff, 0.6);
-fillLight.position.set(-30, 20, -20);
-scene.add(fillLight);
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.5); keyLight.position.set(40, 60, 30); scene.add(keyLight);
+const fillLight = new THREE.DirectionalLight(0x6088ff, 0.6); fillLight.position.set(-30, 20, -20); scene.add(fillLight);
 
-// ============ Wall ============
 const wallGeo = new THREE.PlaneGeometry(WALL_SIZE, WALL_SIZE);
 const wallMat = new THREE.MeshStandardMaterial({ color: 0x12141e, roughness: 0.95, metalness: 0.05 });
-const wall = new THREE.Mesh(wallGeo, wallMat);
-wall.rotation.x = -Math.PI / 2;
-scene.add(wall);
+const wall = new THREE.Mesh(wallGeo, wallMat); wall.rotation.x = -Math.PI / 2; scene.add(wall);
 
 const grid = new THREE.GridHelper(WALL_SIZE, WALL_SIZE / 10, 0x2a3458, 0x161a28);
-grid.position.y = 0.01;
-grid.material.transparent = true;
-grid.material.opacity = 0.6;
-scene.add(grid);
+grid.position.y = 0.01; grid.material.transparent = true; grid.material.opacity = 0.6; scene.add(grid);
 
-// ============ Dynamic Cuboid Building ============
 let cuboidParts = []; 
-let faces = [];       
+let faces = [];      
 
 function buildCuboid() {
-    cuboidParts.forEach(part => {
-        scene.remove(part);
-        if (part.geometry) part.geometry.dispose();
-        if (part.material) part.material.dispose();
-    });
-    cuboidParts = [];
-    faces = [];
-
-    HALF_X = BOX_X / 2;
-    HALF_Z = BOX_Z / 2;
+    cuboidParts.forEach(part => { scene.remove(part); if (part.geometry) part.geometry.dispose(); if (part.material) part.material.dispose(); });
+    cuboidParts = []; faces = [];
+    HALF_X = BOX_X / 2; HALF_Z = BOX_Z / 2;
 
     const footprintGeo = new THREE.PlaneGeometry(BOX_X, BOX_Z);
     const footprintMat = new THREE.MeshBasicMaterial({ color: 0x0a0d15, transparent: true, opacity: 0.8 });
-    const footprint = new THREE.Mesh(footprintGeo, footprintMat);
-    footprint.rotation.x = -Math.PI / 2;
-    footprint.position.y = 0.02;
-    scene.add(footprint);
-    cuboidParts.push(footprint);
+    const footprint = new THREE.Mesh(footprintGeo, footprintMat); footprint.rotation.x = -Math.PI / 2; footprint.position.y = 0.02; scene.add(footprint); cuboidParts.push(footprint);
 
-    const frameMat = new THREE.MeshStandardMaterial({
-      color: 0x5080c0, roughness: 0.25, metalness: 0.85, emissive: 0x0a1830, emissiveIntensity: 0.4
-    });
+    const frameMat = new THREE.MeshStandardMaterial({ color: 0x5080c0, roughness: 0.25, metalness: 0.85, emissive: 0x0a1830, emissiveIntensity: 0.4 });
     const FT = 0.5, FY = 0.5;
-    function addFrameBar(w, h, d, x, y, z) {
-      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), frameMat);
-      m.position.set(x, y, z); scene.add(m); cuboidParts.push(m);
-    }
+    function addFrameBar(w, h, d, x, y, z) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), frameMat); m.position.set(x, y, z); scene.add(m); cuboidParts.push(m); }
     addFrameBar(BOX_X + FT*2, FY, FT, 0, BOX_Y + FY/2, HALF_Z + FT/2);
     addFrameBar(BOX_X + FT*2, FY, FT, 0, BOX_Y + FY/2, -HALF_Z - FT/2);
     addFrameBar(FT, FY, BOX_Z, HALF_X + FT/2, BOX_Y + FY/2, 0);
@@ -422,8 +320,7 @@ function buildCuboid() {
     
     const postMat = new THREE.MeshStandardMaterial({ color: 0x404858, roughness: 0.4, metalness: 0.6 });
     [[-HALF_X-FT/2,-HALF_Z-FT/2],[HALF_X+FT/2,-HALF_Z-FT/2],[-HALF_X-FT/2,HALF_Z+FT/2],[HALF_X+FT/2,HALF_Z+FT/2]].forEach(([x,z])=>{
-      const p = new THREE.Mesh(new THREE.BoxGeometry(FT, BOX_Y, FT), postMat);
-      p.position.set(x, BOX_Y/2, z); scene.add(p); cuboidParts.push(p);
+      const p = new THREE.Mesh(new THREE.BoxGeometry(FT, BOX_Y, FT), postMat); p.position.set(x, BOX_Y/2, z); scene.add(p); cuboidParts.push(p);
     });
 
     const faceDefs = [
@@ -434,90 +331,41 @@ function buildCuboid() {
     ];
     faceDefs.forEach(def => {
       const geo = new THREE.PlaneGeometry(def.uSize, def.vSize);
-      const mat = new THREE.MeshStandardMaterial({
-        color: 0x4a90e2, side: THREE.DoubleSide,
-        transparent: true, opacity: 0.12, roughness: 0.2, metalness: 0.3
-      });
-      const mesh = new THREE.Mesh(geo, mat);
-      mesh.position.set(...def.pos);
-      mesh.rotation.y = def.rotY;
-      mesh.userData = { ...def, isFace: true };
-      scene.add(mesh);
-      cuboidParts.push(mesh);
-      faces.push(mesh);
+      const mat = new THREE.MeshStandardMaterial({ color: 0x4a90e2, side: THREE.DoubleSide, transparent: true, opacity: 0.12, roughness: 0.2, metalness: 0.3 });
+      const mesh = new THREE.Mesh(geo, mat); mesh.position.set(...def.pos); mesh.rotation.y = def.rotY; mesh.userData = { ...def, isFace: true };
+      scene.add(mesh); cuboidParts.push(mesh); faces.push(mesh);
     });
 }
-
 buildCuboid();
 
-// ============ Sensor ============
-const sensor = new THREE.Mesh(
-  new THREE.SphereGeometry(1.3, 32, 32),
-  new THREE.MeshStandardMaterial({ color: 0xff2244, emissive: 0xdd0033, emissiveIntensity: 1.0 })
-);
-sensor.position.set(0, BOX_Y, 0);
-scene.add(sensor);
+const sensor = new THREE.Mesh(new THREE.SphereGeometry(1.3, 32, 32), new THREE.MeshStandardMaterial({ color: 0xff2244, emissive: 0xdd0033, emissiveIntensity: 1.0 }));
+sensor.position.set(0, BOX_Y, 0); scene.add(sensor);
 
-const glow1 = new THREE.Mesh(
-  new THREE.SphereGeometry(2.5, 32, 32),
-  new THREE.MeshBasicMaterial({ color: 0xff3355, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending, depthWrite: false })
-);
+const glow1 = new THREE.Mesh(new THREE.SphereGeometry(2.5, 32, 32), new THREE.MeshBasicMaterial({ color: 0xff3355, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending, depthWrite: false }));
 glow1.position.copy(sensor.position); scene.add(glow1);
 
 const sensorLight = new THREE.PointLight(0xff4466, 2.0, 40);
-sensorLight.position.copy(sensor.position);
-scene.add(sensorLight);
+sensorLight.position.copy(sensor.position); scene.add(sensorLight);
 
-// ============ Image Plane ============
-let imageMesh = null;
-let imageDims = { w: 0, h: 0 };
-let imageCanvas = null;
-let currentFileName = 'test-pattern'; 
+let imageMesh = null; let imageDims = { w: 0, h: 0 }; let imageCanvas = null; let currentFileName = 'test-pattern'; 
 
 function createDefaultTexture() {
-  const c = document.createElement('canvas');
-  c.width = 1000; c.height = 1000;
-  const ctx = c.getContext('2d');
-  ctx.clearRect(0, 0, 1000, 1000);
-  
-  ctx.strokeStyle = 'rgba(255, 100, 100, 0.9)';
-  ctx.lineWidth = 20;
-  ctx.strokeRect(50, 50, 900, 900);
-  
-  ctx.strokeStyle = 'rgba(100, 160, 240, 0.5)';
-  ctx.lineWidth = 5;
-  for (let i = 1; i < 10; i++) {
-    const p = (i/10) * 1000;
-    ctx.beginPath(); ctx.moveTo(p, 50); ctx.lineTo(p, 950); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(50, p); ctx.lineTo(950, p); ctx.stroke();
-  }
-
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return { texture: tex, canvas: c };
+  const c = document.createElement('canvas'); c.width = 1000; c.height = 1000;
+  const ctx = c.getContext('2d'); ctx.clearRect(0, 0, 1000, 1000);
+  ctx.strokeStyle = 'rgba(255, 100, 100, 0.9)'; ctx.lineWidth = 20; ctx.strokeRect(50, 50, 900, 900);
+  ctx.strokeStyle = 'rgba(100, 160, 240, 0.5)'; ctx.lineWidth = 5;
+  for (let i = 1; i < 10; i++) { const p = (i/10) * 1000; ctx.beginPath(); ctx.moveTo(p, 50); ctx.lineTo(p, 950); ctx.stroke(); ctx.beginPath(); ctx.moveTo(50, p); ctx.lineTo(950, p); ctx.stroke(); }
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; return { texture: tex, canvas: c };
 }
 
-// ============ Groups ============
-const rayGroup = new THREE.Group(); 
-rayGroup.visible = false; 
-scene.add(rayGroup);
-
+const rayGroup = new THREE.Group(); rayGroup.visible = false; scene.add(rayGroup);
 const markGroup = new THREE.Group(); scene.add(markGroup);
-
 const faceHits = { front: [], back: [], left: [], right: [] };
 let raysVisible = false, marksVisible = true;
 
-// ============ Toast ============
-const toastEl = document.getElementById('toast');
-let toastTimer = null;
-function showToast(msg, type = 'info') {
-  toastEl.textContent = msg;
-  toastEl.className = 'toast ui-element show ' + type;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { toastEl.className = 'toast ui-element ' + type; }, 3000);
-}
+const toastEl = document.getElementById('toast'); let toastTimer = null;
+function showToast(msg, type = 'info') { toastEl.textContent = msg; toastEl.className = 'toast ui-element show ' + type; clearTimeout(toastTimer); toastTimer = setTimeout(() => { toastEl.className = 'toast ui-element ' + type; }, 3000); }
 
-// ============ Image Loading ============
 const imageInput = document.getElementById('imageInput');
 imageInput.addEventListener('change', (e) => {
   const file = e.target.files[0];
@@ -527,13 +375,9 @@ imageInput.addEventListener('change', (e) => {
   reader.onload = (ev) => {
     const img = new Image();
     img.onload = () => {
-      const oc = document.createElement('canvas');
-      oc.width = img.width; oc.height = img.height;
-      const octx = oc.getContext('2d');
-      octx.drawImage(img, 0, 0);
-      
-      const tex = new THREE.CanvasTexture(oc);
-      tex.colorSpace = THREE.SRGBColorSpace;
+      const oc = document.createElement('canvas'); oc.width = img.width; oc.height = img.height;
+      const octx = oc.getContext('2d'); octx.drawImage(img, 0, 0);
+      const tex = new THREE.CanvasTexture(oc); tex.colorSpace = THREE.SRGBColorSpace;
       loadImageTexture(tex, oc, file.name);
     };
     img.src = ev.target.result;
@@ -542,46 +386,22 @@ imageInput.addEventListener('change', (e) => {
 });
 
 function loadImageTexture(texture, canvas, fileName = 'test-pattern') {
-  if (imageMesh) {
-    scene.remove(imageMesh);
-    imageMesh.geometry.dispose();
-    imageMesh.material.dispose();
-  }
-  
-  currentFileName = fileName;
-  imageCanvas = canvas;
-  updateImageSize();
-
-  const mat = new THREE.MeshBasicMaterial({ 
-      map: texture, side: THREE.DoubleSide, 
-      transparent: true, alphaTest: 0.01, depthWrite: false 
-  });
+  if (imageMesh) { scene.remove(imageMesh); imageMesh.geometry.dispose(); imageMesh.material.dispose(); }
+  currentFileName = fileName; imageCanvas = canvas; updateImageSize();
+  const mat = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true, alphaTest: 0.01, depthWrite: false });
   imageMesh = new THREE.Mesh(new THREE.PlaneGeometry(imageDims.w, imageDims.h), mat);
-  imageMesh.rotation.x = -Math.PI / 2;
-  imageMesh.position.y = 0.05;
-  scene.add(imageMesh);
-  
-  disposeGroup(rayGroup); 
-  disposeGroup(markGroup);
+  imageMesh.rotation.x = -Math.PI / 2; imageMesh.position.y = 0.05; scene.add(imageMesh);
+  disposeGroup(rayGroup); disposeGroup(markGroup);
   Object.keys(faceHits).forEach(k => faceHits[k] = []);
-  document.getElementById('stat-total').textContent = "0";
-  document.getElementById('stat-hits').textContent = "0";
-  
+  document.getElementById('stat-total').textContent = "0"; document.getElementById('stat-hits').textContent = "0";
   updateStatusBar(0, 0);
-  showToast('Image loaded. Adjust settings and click Start Trace.', 'success');
 }
 
 function updateImageSize() {
     if (!imageCanvas) return;
     const aspect = imageCanvas.width / imageCanvas.height;
     const maxDim = parseFloat(document.getElementById('maxSize').value) || 100;
-    if (aspect >= 1) {
-      imageDims.w = maxDim;
-      imageDims.h = maxDim / aspect;
-    } else {
-      imageDims.h = maxDim;
-      imageDims.w = maxDim * aspect;
-    }
+    if (aspect >= 1) { imageDims.w = maxDim; imageDims.h = maxDim / aspect; } else { imageDims.h = maxDim; imageDims.w = maxDim * aspect; }
 }
 
 function updateStatusBar(totalRays, totalHits) {
@@ -595,52 +415,30 @@ function updateStatusBar(totalRays, totalHits) {
     `;
 }
 
-// ============ Trace Button Event ============
 document.getElementById('startTraceBtn').addEventListener('click', () => {
-  if (!imageCanvas) {
-    showToast('Please load an image first', 'error');
-    return;
-  }
+  if (!imageCanvas) { showToast('Please load an image first', 'error'); return; }
   updateImageSize();
-  if (imageMesh) {
-    imageMesh.geometry.dispose();
-    imageMesh.geometry = new THREE.PlaneGeometry(imageDims.w, imageDims.h);
-  }
+  if (imageMesh) { imageMesh.geometry.dispose(); imageMesh.geometry = new THREE.PlaneGeometry(imageDims.w, imageDims.h); }
   let density = parseInt(document.getElementById('rayDensity').value);
   if (isNaN(density) || density < 1) density = 1;
-  if (density > 18) {
-    density = 18;
-    document.getElementById('rayDensity').value = 18;
-    showToast("Max density is 18 rays/cm", "error");
-  }
+  if (density > 18) { density = 18; document.getElementById('rayDensity').value = 18; showToast("Max density is 18 rays/cm", "error"); }
   generateRays(density);
 });
 
-// ============ Rotate Box Button ============
 let isRotated = false;
 document.getElementById('rotateBtn').addEventListener('click', () => {
     isRotated = !isRotated;
-    if (isRotated) {
-        BOX_X = 10;
-        BOX_Z = 15;
-    } else {
-        BOX_X = 15;
-        BOX_Z = 10;
-    }
-    
+    if (isRotated) { BOX_X = 10; BOX_Z = 15; } else { BOX_X = 15; BOX_Z = 10; }
     buildCuboid();
     
-    if (imageCanvas) {
+    // فقط اگر مارک‌ها یا پرتوها از قبل فعال باشند، دوباره محاسبه کن
+    if ((marksVisible || raysVisible) && imageCanvas) {
         let density = parseInt(document.getElementById('rayDensity').value) || 10;
         if (density > 18) density = 18;
         generateRays(density);
-        showToast(`Box Rotated! Re-tracing rays...`, 'info');
-    } else {
-        showToast(`Box Rotated!`, 'info');
     }
 });
 
-// ============ Eye Toggle Button ============
 let isUIHidden = false;
 const eyeToggle = document.getElementById('eyeToggle');
 const eyeOpenSVG = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
@@ -652,12 +450,9 @@ eyeToggle.addEventListener('click', () => {
     eyeToggle.querySelector('svg').innerHTML = isUIHidden ? eyeClosedSVG : eyeOpenSVG;
 });
 
-// ============ Massive Ray Generation ============
 function generateRays(density) {
-  disposeGroup(rayGroup); 
-  disposeGroup(markGroup);
+  disposeGroup(rayGroup); disposeGroup(markGroup);
   Object.keys(faceHits).forEach(k => faceHits[k] = []);
-
   document.getElementById('loader').classList.remove('hidden');
   document.getElementById('loader').querySelector('.loader-text').textContent = `TRACING ${density} RAYS/CM...`;
 
@@ -665,87 +460,58 @@ function generateRays(density) {
     try {
       const ctx = imageCanvas.getContext('2d');
       const imgData = ctx.getImageData(0, 0, imageCanvas.width, imageCanvas.height).data;
-      
       const maxRaysPerSide = 3000;
       let numX = Math.max(2, Math.round(imageDims.w * density));
       let numZ = Math.max(2, Math.round(imageDims.h * density));
-      
       if (numX > maxRaysPerSide) numX = maxRaysPerSide;
       if (numZ > maxRaysPerSide) numZ = maxRaysPerSide;
-      
-      const stepPxX = imageCanvas.width / numX;
-      const stepPxY = imageCanvas.height / numZ;
+      const stepPxX = imageCanvas.width / numX; const stepPxY = imageCanvas.height / numZ;
 
       const maxRays = numX * numZ;
       const rayPositions = new Float32Array(maxRays * 6);
       const hitPositions = new Float32Array(maxRays * 3);
-      let rayCount = 0;
-      let hitCount = 0;
-      
-      const sensorX = 0, sensorY = 10, sensorZ = 0;
-      const startY = 0.08;
+      let rayCount = 0; let hitCount = 0;
+      const sensorX = 0, sensorY = 10, sensorZ = 0; const startY = 0.08;
 
       for(let i=0; i<numX; i++) {
         const px = Math.floor(i * stepPxX);
-        const u = (i / (numX - 1)) * 2 - 1;
-        const sx = u * (imageDims.w / 2);
-
+        const u = (i / (numX - 1)) * 2 - 1; const sx = u * (imageDims.w / 2);
         for(let j=0; j<numZ; j++) {
           const py = Math.floor(j * stepPxY);
-          const idx = (py * imageCanvas.width + px) * 4;
-          const alpha = imgData[idx + 3];
-
-          const v = (j / (numZ - 1)) * 2 - 1;
-          const sz = v * (imageDims.h / 2);
+          const idx = (py * imageCanvas.width + px) * 4; const alpha = imgData[idx + 3];
+          const v = (j / (numZ - 1)) * 2 - 1; const sz = v * (imageDims.h / 2);
 
           if (alpha > 128 && (Math.abs(sx) > HALF_X + 0.01 || Math.abs(sz) > HALF_Z + 0.01)) {
-            
             const rIdx = rayCount * 6;
             rayPositions[rIdx] = sx; rayPositions[rIdx+1] = startY; rayPositions[rIdx+2] = sz;
             rayPositions[rIdx+3] = sensorX; rayPositions[rIdx+4] = sensorY; rayPositions[rIdx+5] = sensorZ;
             rayCount++;
 
-            const dirX = sensorX - sx;
-            const dirY = sensorY - startY;
-            const dirZ = sensorZ - sz;
-
-            let bestT = 2; 
-            let hitFace = null, hitU = 0, hitV = 0, hitX = 0, hitY = 0, hitZ = 0;
+            const dirX = sensorX - sx; const dirY = sensorY - startY; const dirZ = sensorZ - sz;
+            let bestT = 2; let hitFace = null, hitU = 0, hitV = 0, hitX = 0, hitY = 0, hitZ = 0;
 
             if (dirZ !== 0) {
               const t = (HALF_Z - sz) / dirZ;
               if (t > 0.001 && t < bestT) {
-                const hx = sx + dirX * t;
-                const hy = startY + dirY * t;
-                if (Math.abs(hx) <= HALF_X && hy >= 0 && hy <= BOX_Y) {
-                  bestT = t; hitFace = 'front'; hitU = hx + HALF_X; hitV = hy; hitX = hx; hitY = hy; hitZ = HALF_Z;
-                }
+                const hx = sx + dirX * t; const hy = startY + dirY * t;
+                if (Math.abs(hx) <= HALF_X && hy >= 0 && hy <= BOX_Y) { bestT = t; hitFace = 'front'; hitU = hx + HALF_X; hitV = hy; hitX = hx; hitY = hy; hitZ = HALF_Z; }
               }
               const t2 = (-HALF_Z - sz) / dirZ;
               if (t2 > 0.001 && t2 < bestT) {
-                const hx = sx + dirX * t2;
-                const hy = startY + dirY * t2;
-                if (Math.abs(hx) <= HALF_X && hy >= 0 && hy <= BOX_Y) {
-                  bestT = t2; hitFace = 'back'; hitU = -hx + HALF_X; hitV = hy; hitX = hx; hitY = hy; hitZ = -HALF_Z;
-                }
+                const hx = sx + dirX * t2; const hy = startY + dirY * t2;
+                if (Math.abs(hx) <= HALF_X && hy >= 0 && hy <= BOX_Y) { bestT = t2; hitFace = 'back'; hitU = -hx + HALF_X; hitV = hy; hitX = hx; hitY = hy; hitZ = -HALF_Z; }
               }
             }
             if (dirX !== 0) {
               const t = (HALF_X - sx) / dirX;
               if (t > 0.001 && t < bestT) {
-                const hz = sz + dirZ * t;
-                const hy = startY + dirY * t;
-                if (Math.abs(hz) <= HALF_Z && hy >= 0 && hy <= BOX_Y) {
-                  bestT = t; hitFace = 'right'; hitU = -hz + HALF_Z; hitV = hy; hitX = HALF_X; hitY = hy; hitZ = hz;
-                }
+                const hz = sz + dirZ * t; const hy = startY + dirY * t;
+                if (Math.abs(hz) <= HALF_Z && hy >= 0 && hy <= BOX_Y) { bestT = t; hitFace = 'right'; hitU = -hz + HALF_Z; hitV = hy; hitX = HALF_X; hitY = hy; hitZ = hz; }
               }
               const t2 = (-HALF_X - sx) / dirX;
               if (t2 > 0.001 && t2 < bestT) {
-                const hz = sz + dirZ * t2;
-                const hy = startY + dirY * t2;
-                if (Math.abs(hz) <= HALF_Z && hy >= 0 && hy <= BOX_Y) {
-                  bestT = t2; hitFace = 'left'; hitU = hz + HALF_Z; hitV = hy; hitX = -HALF_X; hitY = hy; hitZ = hz;
-                }
+                const hz = sz + dirZ * t2; const hy = startY + dirY * t2;
+                if (Math.abs(hz) <= HALF_Z && hy >= 0 && hy <= BOX_Y) { bestT = t2; hitFace = 'left'; hitU = hz + HALF_Z; hitV = hy; hitX = -HALF_X; hitY = hy; hitZ = hz; }
               }
             }
 
@@ -761,20 +527,16 @@ function generateRays(density) {
 
       const rayGeo = new THREE.BufferGeometry();
       rayGeo.setAttribute('position', new THREE.Float32BufferAttribute(rayPositions.subarray(0, rayCount * 6), 3));
-      const rayMat = new THREE.LineBasicMaterial({
-        color: 0xffaa00, transparent: true, opacity: 0.04, 
-        blending: THREE.AdditiveBlending, depthWrite: false
-      });
+      const rayMat = new THREE.LineBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.04, blending: THREE.AdditiveBlending, depthWrite: false });
       const rayLines = new THREE.LineSegments(rayGeo, rayMat);
       rayGroup.add(rayLines);
-      rayGroup.visible = false; 
+      
+      // پرتوها فقط در صورتی نمایش داده میشوند که از قبل فعال باشند
+      rayGroup.visible = raysVisible;
 
       const hitGeo = new THREE.BufferGeometry();
       hitGeo.setAttribute('position', new THREE.Float32BufferAttribute(hitPositions.subarray(0, hitCount * 3), 3));
-      const hitMat = new THREE.PointsMaterial({
-        color: 0xcc44ff, size: 0.15, sizeAttenuation: true,
-        transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false
-      });
+      const hitMat = new THREE.PointsMaterial({ color: 0xcc44ff, size: 0.15, sizeAttenuation: true, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false });
       const hitPoints = new THREE.Points(hitGeo, hitMat);
       markGroup.add(hitPoints);
 
@@ -784,10 +546,7 @@ function generateRays(density) {
       document.getElementById('stat-right').textContent = (faceHits.right.length / 2).toLocaleString();
       document.getElementById('stat-total').textContent = rayCount.toLocaleString();
       document.getElementById('stat-hits').textContent = hitCount.toLocaleString();
-      
       updateStatusBar(rayCount, hitCount);
-
-      showToast(`Trace complete: ${rayCount.toLocaleString()} rays`, 'success');
     } catch(e) {
       console.error(e);
       showToast("Error during tracing. Try lower density.", "error");
@@ -799,74 +558,45 @@ function generateRays(density) {
 
 function disposeGroup(group) {
   while (group.children.length) {
-    const c = group.children[0];
-    group.remove(c);
+    const c = group.children[0]; group.remove(c);
     if (c.geometry) c.geometry.dispose();
     if (c.material) { if (Array.isArray(c.material)) c.material.forEach(m => m.dispose()); else c.material.dispose(); }
   }
 }
 
-// ============ Interaction: Hover & Click ============
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
+const raycaster = new THREE.Raycaster(); const mouse = new THREE.Vector2();
 let hoveredFace = null, mouseDownPos = null, mouseDownTime = 0;
 
 renderer.domElement.addEventListener('mousemove', (e) => {
-  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1; mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const hits = raycaster.intersectObjects(faces);
   if (hits.length > 0) {
     const f = hits[0].object;
-    if (hoveredFace !== f) {
-      if (hoveredFace) { hoveredFace.material.opacity = 0.12; }
-      hoveredFace = f;
-      f.material.opacity = 0.3;
-      renderer.domElement.style.cursor = 'pointer';
-    }
+    if (hoveredFace !== f) { if (hoveredFace) { hoveredFace.material.opacity = 0.12; } hoveredFace = f; f.material.opacity = 0.3; renderer.domElement.style.cursor = 'pointer'; }
   } else {
-    if (hoveredFace) {
-      hoveredFace.material.opacity = 0.12;
-      hoveredFace = null; renderer.domElement.style.cursor = 'default';
-    }
+    if (hoveredFace) { hoveredFace.material.opacity = 0.12; hoveredFace = null; renderer.domElement.style.cursor = 'default'; }
   }
 });
 
-renderer.domElement.addEventListener('mousedown', (e) => {
-  mouseDownPos = { x: e.clientX, y: e.clientY };
-  mouseDownTime = Date.now();
-});
-
+renderer.domElement.addEventListener('mousedown', (e) => { mouseDownPos = { x: e.clientX, y: e.clientY }; mouseDownTime = Date.now(); });
 renderer.domElement.addEventListener('mouseup', (e) => {
   if (!mouseDownPos) return;
-  const dx = e.clientX - mouseDownPos.x, dy = e.clientY - mouseDownPos.y;
-  const dist = Math.hypot(dx, dy), dt = Date.now() - mouseDownTime;
-  mouseDownPos = null;
-  if (dist > 5 || dt > 500) return;
-  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  const dx = e.clientX - mouseDownPos.x, dy = e.clientY - mouseDownPos.y; const dist = Math.hypot(dx, dy), dt = Date.now() - mouseDownTime;
+  mouseDownPos = null; if (dist > 5 || dt > 500) return;
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1; mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const hits = raycaster.intersectObjects(faces);
   if (hits.length > 0) exportFaceAsSVG(hits[0].object);
 });
 
-// ============ Minimal Vector SVG Export System ============
 function exportFaceAsSVG(face) {
-  const def = face.userData;
-  const name = def.name;
-  const uSize = def.uSize; 
-  const vSize = def.vSize; 
-  const uvArray = faceHits[name];
-  const hitCount = uvArray.length / 2;
+  const def = face.userData; const name = def.name;
+  const uSize = def.uSize; const vSize = def.vSize; 
+  const uvArray = faceHits[name]; const hitCount = uvArray.length / 2;
 
-  showToast(`Generating Vector SVG for ${name.toUpperCase()}...`, 'info');
-
-  const pad = 0.1; 
-  const vbW = uSize + pad * 2;
-  const vbH = vSize + pad * 2;
-  const scale = 50; 
-  const pxW = vbW * scale;
-  const pxH = vbH * scale;
+  const pad = 0.1; const vbW = uSize + pad * 2; const vbH = vSize + pad * 2;
+  const scale = 50; const pxW = vbW * scale; const pxH = vbH * scale;
   
   const parts = [];
   parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${pxW}" height="${pxH}" viewBox="${-pad} ${-pad} ${vbW} ${vbH}" overflow="hidden">`);
@@ -875,10 +605,11 @@ function exportFaceAsSVG(face) {
   if (hitCount > 0) {
     parts.push(`<path d="`);
     for (let i = 0; i < uvArray.length; i += 2) {
-      const u = uvArray[i];
-      const v = uvArray[i + 1];
-      const x = u.toFixed(2);
-      const y = (vSize - v).toFixed(2);
+      // اعمال محدودیت (Clamp) برای اینکه نقاط دقیقاً داخل کادر بمانند
+      let cx = Math.max(0.05, Math.min(uSize - 0.05, uvArray[i]));
+      let cy = Math.max(0.05, Math.min(vSize - 0.05, uvArray[i + 1]));
+      const x = (cx - 0.05).toFixed(2);
+      const y = (vSize - cy - 0.05).toFixed(2);
       parts.push(`M${x} ${y}h.1v.1h-.1z`);
     }
     parts.push(`" fill="#cc44ff" />`);
@@ -887,75 +618,48 @@ function exportFaceAsSVG(face) {
 
   const blob = new Blob(parts, { type: "image/svg+xml;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `face-${name}-vector-${Date.now()}.svg`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const a = document.createElement('a'); a.href = url; a.download = `face-${name}-vector-${Date.now()}.svg`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 1000);
-  
-  showToast(`${name.toUpperCase()} face exported as minimal Vector SVG!`, 'success');
 }
 
-// ============ Buttons ============
 document.getElementById('resetCam').addEventListener('click', () => {
-  const start = camera.position.clone();
-  const startT = controls.target.clone();
-  const t0 = performance.now();
-  const dur = 600;
+  const start = camera.position.clone(); const startT = controls.target.clone(); const t0 = performance.now(); const dur = 600;
   function step() {
-    const t = Math.min(1, (performance.now() - t0) / dur);
-    const e = 1 - Math.pow(1 - t, 3);
-    camera.position.lerpVectors(start, defaultCamPos, e);
-    controls.target.lerpVectors(startT, defaultCamTarget, e);
+    const t = Math.min(1, (performance.now() - t0) / dur); const e = 1 - Math.pow(1 - t, 3);
+    camera.position.lerpVectors(start, defaultCamPos, e); controls.target.lerpVectors(startT, defaultCamTarget, e);
     if (t < 1) requestAnimationFrame(step);
   }
   step();
 });
 
 document.getElementById('toggleRays').addEventListener('click', (e) => {
-  raysVisible = !raysVisible;
-  rayGroup.visible = raysVisible;
+  raysVisible = !raysVisible; rayGroup.visible = raysVisible;
   e.target.style.opacity = raysVisible ? '1' : '0.4';
 });
 
 document.getElementById('toggleMarks').addEventListener('click', (e) => {
-  marksVisible = !marksVisible;
-  markGroup.visible = marksVisible;
+  marksVisible = !marksVisible; markGroup.visible = marksVisible;
   e.target.style.opacity = marksVisible ? '1' : '0.4';
 });
 
-// ============ Resize ============
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+  camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// ============ Animation Loop ============
 let time = 0;
 function animate() {
-  requestAnimationFrame(animate);
-  time += 0.016;
-  controls.update();
-
+  requestAnimationFrame(animate); time += 0.016; controls.update();
   const pulse = 1 + Math.sin(time * 2.5) * 0.08;
-  glow1.scale.setScalar(pulse);
-  sensor.material.emissiveIntensity = 0.9 + Math.sin(time * 3) * 0.2;
-  sensorLight.intensity = 1.8 + Math.sin(time * 3) * 0.4;
-
+  glow1.scale.setScalar(pulse); sensor.material.emissiveIntensity = 0.9 + Math.sin(time * 3) * 0.2; sensorLight.intensity = 1.8 + Math.sin(time * 3) * 0.4;
   renderer.render(scene, camera);
 }
 
-// ============ Initialize ============
 const defaultTex = createDefaultTexture();
 loadImageTexture(defaultTex.texture, defaultTex.canvas, 'test-pattern');
 animate();
-
-setTimeout(() => {
-  document.getElementById('loader').classList.add('hidden');
-}, 300);
+setTimeout(() => { document.getElementById('loader').classList.add('hidden'); }, 300);
 
 </script>
 </body>
