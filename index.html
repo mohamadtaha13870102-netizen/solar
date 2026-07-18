@@ -30,6 +30,17 @@
     user-select: none; -webkit-user-select: none;
   }
   canvas { display: block; }
+  
+  /* Utility for fading out UI elements */
+  .ui-element {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  body.hide-ui .ui-element {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: scale(0.95) !important;
+  }
+
   .panel {
     position: fixed; z-index: 10;
     background: var(--panel);
@@ -114,6 +125,7 @@
   }
   .status-bar .label { color: var(--text-dim); }
   .status-bar .value { color: var(--amber); }
+  
   .stats-panel { top: 20px; right: 20px; padding: 16px 20px; min-width: 220px; }
   .stats-panel h3 {
     font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
@@ -127,13 +139,15 @@
   .stat-label { color: var(--text-mid); }
   .stat-value { color: var(--text); font-weight: 600; min-width: 40px; text-align: right; }
   .stat-value.highlight { color: var(--purple); }
+  
   .info-panel {
     bottom: 20px; left: 20px; padding: 14px 18px; max-width: 380px;
     font-size: 12px; line-height: 1.7; color: var(--text-mid);
   }
   .info-panel strong { color: var(--amber); font-weight: 600; }
+  
   .help-hint {
-    position: fixed; bottom: 20px; right: 20px; z-index: 10;
+    position: fixed; bottom: 80px; right: 20px; z-index: 10;
     padding: 10px 14px; background: var(--panel); backdrop-filter: blur(12px);
     border: 1px solid var(--border); border-radius: 8px;
     font-size: 10px; color: var(--text-dim);
@@ -144,6 +158,29 @@
     background: rgba(255,255,255,0.06); border: 1px solid var(--border);
     border-radius: 3px; color: var(--text); margin: 0 2px;
   }
+  
+  /* Eye Toggle Button - NO ui-element class here! */
+  .eye-toggle {
+    position: fixed; bottom: 20px; right: 20px; z-index: 150;
+    width: 48px; height: 48px;
+    background: var(--panel); backdrop-filter: blur(12px);
+    border: 1px solid var(--border-hi);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .eye-toggle:hover {
+    transform: scale(1.1);
+    background: rgba(74, 158, 255, 0.2);
+  }
+  .eye-toggle svg {
+    width: 24px; height: 24px;
+    stroke: var(--text); stroke-width: 2;
+    fill: none; stroke-linecap: round; stroke-linejoin: round;
+  }
+
   .toast {
     position: fixed; top: 50%; left: 50%;
     transform: translate(-50%, -50%) translateY(30px);
@@ -159,6 +196,7 @@
   .toast.success { border-color: var(--success); }
   .toast.error { border-color: var(--danger); }
   .toast.info { border-color: var(--accent); }
+  
   #loader {
     position: fixed; inset: 0; background: var(--bg); z-index: 200;
     display: flex; align-items: center; justify-content: center;
@@ -173,50 +211,32 @@
   @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
 
   /* =========================================
-     موبایل و تبلت (رسپانسیو)
-     به کدهای دسکتاپ بالاتر دست نخورده است
+     موبایل و تبلت (رسپانسیو فشرده)
      ========================================= */
   @media only screen and (max-width: 768px) {
     .panel { backdrop-filter: blur(10px); }
     
-    /* پنل کنترل بالا */
     .control-panel {
       top: 10px; left: 10px; right: 10px;
-      width: auto; max-width: none; padding: 14px;
-      border-radius: 12px; max-height: 55vh; overflow-y: auto;
-    }
-    .control-panel h1 { font-size: 15px; }
-    .control-panel .subtitle { font-size: 9px; margin-bottom: 10px; }
-    .file-btn { padding: 10px; font-size: 12px; margin-bottom: 8px; }
-    .density-container { padding: 6px 10px; margin-bottom: 8px; }
-    .density-container label { font-size: 10px; }
-    .density-container input { width: 50px; padding: 4px; font-size: 12px; }
-    .trace-btn { padding: 8px; font-size: 12px; margin-bottom: 8px; }
-    .btn-group { gap: 6px; margin-bottom: 8px; }
-    button { padding: 6px 10px; font-size: 10px; }
-    .status-bar { font-size: 10px; margin-top: 8px; padding-top: 8px; }
-
-    /* پنل آمار پایین */
-    .stats-panel {
-      top: auto; bottom: 10px; left: 10px; right: 10px;
-      width: auto; min-width: 0; padding: 12px;
+      width: auto; max-width: none; padding: 10px 12px;
       border-radius: 12px;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
     }
-    .stats-panel h3 {
-      grid-column: 1 / -1; font-size: 10px; margin-bottom: 4px;
-    }
-    .stats-panel .stat-row { font-size: 10px; padding: 2px 0; }
-    .stats-panel > div[style*="border-top"] {
-      grid-column: 1 / -1; margin-top: 4px; padding-top: 4px;
-      border-top: 1px solid var(--border) !important;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
-    }
+    .control-panel h1 { font-size: 14px; margin-bottom: 2px; }
+    .control-panel .subtitle { font-size: 8px; margin-bottom: 6px; }
+    .file-btn { padding: 8px; font-size: 11px; margin-bottom: 6px; }
+    .density-container { padding: 4px 8px; margin-bottom: 6px; gap: 4px; }
+    .density-container label { font-size: 9px; }
+    .density-container input { width: 45px; padding: 3px; font-size: 11px; }
+    .trace-btn { padding: 7px; font-size: 11px; margin-bottom: 6px; }
+    .btn-group { gap: 4px; margin-bottom: 6px; }
+    button { padding: 5px 8px; font-size: 9px; }
+    .status-bar { font-size: 9px; margin-top: 6px; padding-top: 6px; line-height: 1.4; }
+    
+    .status-image, .status-rays, .status-hits { display: none !important; }
 
-    /* مخفی کردن پنل های اضافی در موبایل برای فضای بیشتر */
+    .stats-panel { display: none !important; }
     .info-panel, .help-hint { display: none !important; }
 
-    /* توست ها */
     .toast {
       font-size: 12px; padding: 10px 20px;
       width: 80%; max-width: 320px; text-align: center;
@@ -229,7 +249,7 @@
 
 <div id="loader"><div class="loader-text">INITIALIZING SCENE...</div></div>
 
-<div class="panel control-panel">
+<div class="panel control-panel ui-element">
   <h1>Ray-Trace Studio</h1>
   <div class="subtitle">VECTOR EXPORT SYSTEM</div>
   <label class="file-btn">
@@ -249,18 +269,19 @@
   
   <div class="btn-group">
     <button id="resetCam">Reset View</button>
+    <button id="rotateBtn">Rotate Box 90°</button>
     <button id="toggleRays" style="opacity: 0.4;">Rays</button>
     <button id="toggleMarks">Marks</button>
   </div>
   <div class="status-bar" id="statusBar">
-    <div><span class="label">Image:</span> <span class="value">test-pattern</span></div>
-    <div><span class="label">Size:</span> <span class="value">— × —</span></div>
-    <div><span class="label">Rays:</span> <span class="value" id="statusRays">0</span></div>
-    <div><span class="label">Hits:</span> <span class="value" id="statusHits">0</span></div>
+    <div class="status-image"><span class="label">Image:</span> <span class="value">test-pattern</span></div>
+    <div class="status-size"><span class="label">Size:</span> <span class="value">— × —</span></div>
+    <div class="status-rays"><span class="label">Rays:</span> <span class="value" id="statusRays">0</span></div>
+    <div class="status-hits"><span class="label">Hits:</span> <span class="value" id="statusHits">0</span></div>
   </div>
 </div>
 
-<div class="panel stats-panel">
+<div class="panel stats-panel ui-element">
   <h3>Face Hit Distribution</h3>
   <div class="stat-row"><span class="stat-label">Front</span><span class="stat-value" id="stat-front">0</span></div>
   <div class="stat-row"><span class="stat-label">Back</span><span class="stat-value" id="stat-back">0</span></div>
@@ -272,16 +293,24 @@
   </div>
 </div>
 
-<div class="panel info-panel">
+<div class="panel info-panel ui-element">
   <strong>Scene:</strong> Longest side of the image is scaled to your <strong>Max Dimension</strong> input. Transparency is respected! Rays emit only from opaque pixels outside the cuboid footprint.
   <strong>Click any face</strong> to export its dense ray-hit pattern as an <strong>infinitely scalable Vector (SVG)</strong>.
 </div>
 
-<div class="help-hint">
+<div class="help-hint ui-element">
   <span class="key">Drag</span> orbit · <span class="key">Scroll</span> zoom · <span class="key">Click face</span> export SVG
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- Eye Toggle Button (Does not hide) -->
+<div class="eye-toggle" id="eyeToggle" title="Hide/Show UI">
+  <svg viewBox="0 0 24 24">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+  </svg>
+</div>
+
+<div class="toast ui-element" id="toast"></div>
 
 <script type="importmap">
 {
@@ -296,16 +325,17 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // ============ Configuration ============
-const BOX_SIZE = 20;
-const BOX_HEIGHT = 10;
-const HALF = BOX_SIZE / 2;
-const HALF_H = BOX_HEIGHT / 2;
+let BOX_X = 15;  
+let BOX_Z = 10;  
+const BOX_Y = 10;  
+let HALF_X = BOX_X / 2;
+let HALF_Z = BOX_Z / 2;
+const HALF_Y = BOX_Y / 2;
 const WALL_SIZE = 300;
 
 // ============ Scene Setup ============
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x07080d);
-scene.fog = new THREE.Fog(0x07080d, 100, 350);
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 const defaultCamPos = new THREE.Vector3(85, 75, 85);
@@ -328,11 +358,11 @@ controls.maxDistance = 300;
 controls.maxPolarAngle = Math.PI / 2 - 0.02;
 
 // ============ Lighting ============
-scene.add(new THREE.AmbientLight(0x303048, 0.8));
-const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
+scene.add(new THREE.AmbientLight(0x4a4a60, 1.0));
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
 keyLight.position.set(40, 60, 30);
 scene.add(keyLight);
-const fillLight = new THREE.DirectionalLight(0x6088ff, 0.4);
+const fillLight = new THREE.DirectionalLight(0x6088ff, 0.6);
 fillLight.position.set(-30, 20, -20);
 scene.add(fillLight);
 
@@ -349,60 +379,83 @@ grid.material.transparent = true;
 grid.material.opacity = 0.6;
 scene.add(grid);
 
-// Highlight cuboid footprint on wall
-const footprintGeo = new THREE.PlaneGeometry(BOX_SIZE, BOX_SIZE);
-const footprintMat = new THREE.MeshBasicMaterial({ color: 0x0a0d15, transparent: true, opacity: 0.8 });
-const footprint = new THREE.Mesh(footprintGeo, footprintMat);
-footprint.rotation.x = -Math.PI / 2;
-footprint.position.y = 0.02;
-scene.add(footprint);
+// ============ Dynamic Cuboid Building ============
+let cuboidParts = []; 
+let faces = [];       
 
-// ============ Cuboid Frame ============
-const frameMat = new THREE.MeshStandardMaterial({
-  color: 0x5080c0, roughness: 0.25, metalness: 0.85, emissive: 0x0a1830, emissiveIntensity: 0.4
-});
-const FT = 0.5, FH = 0.5;
-function addFrameBar(w, h, d, x, y, z) {
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), frameMat);
-  m.position.set(x, y, z); scene.add(m);
+function buildCuboid() {
+    cuboidParts.forEach(part => {
+        scene.remove(part);
+        if (part.geometry) part.geometry.dispose();
+        if (part.material) part.material.dispose();
+    });
+    cuboidParts = [];
+    faces = [];
+
+    HALF_X = BOX_X / 2;
+    HALF_Z = BOX_Z / 2;
+
+    const footprintGeo = new THREE.PlaneGeometry(BOX_X, BOX_Z);
+    const footprintMat = new THREE.MeshBasicMaterial({ color: 0x0a0d15, transparent: true, opacity: 0.8 });
+    const footprint = new THREE.Mesh(footprintGeo, footprintMat);
+    footprint.rotation.x = -Math.PI / 2;
+    footprint.position.y = 0.02;
+    scene.add(footprint);
+    cuboidParts.push(footprint);
+
+    const frameMat = new THREE.MeshStandardMaterial({
+      color: 0x5080c0, roughness: 0.25, metalness: 0.85, emissive: 0x0a1830, emissiveIntensity: 0.4
+    });
+    const FT = 0.5, FY = 0.5;
+    function addFrameBar(w, h, d, x, y, z) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), frameMat);
+      m.position.set(x, y, z); scene.add(m); cuboidParts.push(m);
+    }
+    addFrameBar(BOX_X + FT*2, FY, FT, 0, BOX_Y + FY/2, HALF_Z + FT/2);
+    addFrameBar(BOX_X + FT*2, FY, FT, 0, BOX_Y + FY/2, -HALF_Z - FT/2);
+    addFrameBar(FT, FY, BOX_Z, HALF_X + FT/2, BOX_Y + FY/2, 0);
+    addFrameBar(FT, FY, BOX_Z, -HALF_X - FT/2, BOX_Y + FY/2, 0);
+    addFrameBar(BOX_X + FT*2, FY, FT, 0, FY/2, HALF_Z + FT/2);
+    addFrameBar(BOX_X + FT*2, FY, FT, 0, FY/2, -HALF_Z - FT/2);
+    addFrameBar(FT, FY, BOX_Z, HALF_X + FT/2, FY/2, 0);
+    addFrameBar(FT, FY, BOX_Z, -HALF_X - FT/2, FY/2, 0);
+    
+    const postMat = new THREE.MeshStandardMaterial({ color: 0x404858, roughness: 0.4, metalness: 0.6 });
+    [[-HALF_X-FT/2,-HALF_Z-FT/2],[HALF_X+FT/2,-HALF_Z-FT/2],[-HALF_X-FT/2,HALF_Z+FT/2],[HALF_X+FT/2,HALF_Z+FT/2]].forEach(([x,z])=>{
+      const p = new THREE.Mesh(new THREE.BoxGeometry(FT, BOX_Y, FT), postMat);
+      p.position.set(x, BOX_Y/2, z); scene.add(p); cuboidParts.push(p);
+    });
+
+    const faceDefs = [
+      { name: 'front', label: 'FRONT', pos: [0, HALF_Y, HALF_Z],  rotY: 0,           uSize: BOX_X, vSize: BOX_Y },
+      { name: 'back',  label: 'BACK',  pos: [0, HALF_Y, -HALF_Z], rotY: Math.PI,     uSize: BOX_X, vSize: BOX_Y },
+      { name: 'right', label: 'RIGHT', pos: [HALF_X, HALF_Y, 0],  rotY: -Math.PI/2,  uSize: BOX_Z, vSize: BOX_Y },
+      { name: 'left',  label: 'LEFT',  pos: [-HALF_X, HALF_Y, 0], rotY: Math.PI/2,   uSize: BOX_Z, vSize: BOX_Y }
+    ];
+    faceDefs.forEach(def => {
+      const geo = new THREE.PlaneGeometry(def.uSize, def.vSize);
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0x4a90e2, side: THREE.DoubleSide,
+        transparent: true, opacity: 0.12, roughness: 0.2, metalness: 0.3
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(...def.pos);
+      mesh.rotation.y = def.rotY;
+      mesh.userData = { ...def, isFace: true };
+      scene.add(mesh);
+      cuboidParts.push(mesh);
+      faces.push(mesh);
+    });
 }
-addFrameBar(BOX_SIZE + FT*2, FH, FT, 0, BOX_HEIGHT + FH/2, HALF + FT/2);
-addFrameBar(BOX_SIZE + FT*2, FH, FT, 0, BOX_HEIGHT + FH/2, -HALF - FT/2);
-addFrameBar(FT, FH, BOX_SIZE, HALF + FT/2, BOX_HEIGHT + FH/2, 0);
-addFrameBar(FT, FH, BOX_SIZE, -HALF - FT/2, BOX_HEIGHT + FH/2, 0);
-addFrameBar(BOX_SIZE + FT*2, FH, FT, 0, FH/2, HALF + FT/2);
-addFrameBar(BOX_SIZE + FT*2, FH, FT, 0, FH/2, -HALF - FT/2);
-addFrameBar(FT, FH, BOX_SIZE, HALF + FT/2, FH/2, 0);
-addFrameBar(FT, FH, BOX_SIZE, -HALF - FT/2, FH/2, 0);
 
-// ============ Cuboid Side Faces ============
-const faceDefs = [
-  { name: 'front', label: 'FRONT', pos: [0, HALF_H, HALF],  rotY: 0,           normal: [0,0,1],  uAxis: [1,0,0],  vAxis: [0,1,0] },
-  { name: 'back',  label: 'BACK',  pos: [0, HALF_H, -HALF], rotY: Math.PI,     normal: [0,0,-1], uAxis: [-1,0,0], vAxis: [0,1,0] },
-  { name: 'right', label: 'RIGHT', pos: [HALF, HALF_H, 0],  rotY: -Math.PI/2,  normal: [1,0,0],  uAxis: [0,0,-1], vAxis: [0,1,0] },
-  { name: 'left',  label: 'LEFT',  pos: [-HALF, HALF_H, 0], rotY: Math.PI/2,   normal: [-1,0,0], uAxis: [0,0,1],  vAxis: [0,1,0] }
-];
-const faces = [];
-faceDefs.forEach(def => {
-  const geo = new THREE.PlaneGeometry(BOX_SIZE, BOX_HEIGHT);
-  const mat = new THREE.MeshStandardMaterial({
-    color: 0x4a90e2, side: THREE.DoubleSide,
-    transparent: true, opacity: 0.12, roughness: 0.2, metalness: 0.3
-  });
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(...def.pos);
-  mesh.rotation.y = def.rotY;
-  mesh.userData = { ...def, isFace: true };
-  scene.add(mesh);
-  faces.push(mesh);
-});
+buildCuboid();
 
 // ============ Sensor ============
 const sensor = new THREE.Mesh(
   new THREE.SphereGeometry(1.3, 32, 32),
   new THREE.MeshStandardMaterial({ color: 0xff2244, emissive: 0xdd0033, emissiveIntensity: 1.0 })
 );
-sensor.position.set(0, BOX_HEIGHT, 0);
+sensor.position.set(0, BOX_Y, 0);
 scene.add(sensor);
 
 const glow1 = new THREE.Mesh(
@@ -459,9 +512,9 @@ const toastEl = document.getElementById('toast');
 let toastTimer = null;
 function showToast(msg, type = 'info') {
   toastEl.textContent = msg;
-  toastEl.className = 'toast show ' + type;
+  toastEl.className = 'toast ui-element show ' + type;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { toastEl.className = 'toast ' + type; }, 3000);
+  toastTimer = setTimeout(() => { toastEl.className = 'toast ui-element ' + type; }, 3000);
 }
 
 // ============ Image Loading ============
@@ -520,10 +573,8 @@ function loadImageTexture(texture, canvas, fileName = 'test-pattern') {
 
 function updateImageSize() {
     if (!imageCanvas) return;
-    
     const aspect = imageCanvas.width / imageCanvas.height;
     const maxDim = parseFloat(document.getElementById('maxSize').value) || 100;
-    
     if (aspect >= 1) {
       imageDims.w = maxDim;
       imageDims.h = maxDim / aspect;
@@ -536,12 +587,11 @@ function updateImageSize() {
 function updateStatusBar(totalRays, totalHits) {
     const displaySize = imageCanvas ? `${imageDims.w.toFixed(1)}cm × ${imageDims.h.toFixed(1)}cm` : '— × —';
     const displayName = currentFileName.length > 18 ? currentFileName.slice(0,15)+'...' : currentFileName;
-    
     document.getElementById('statusBar').innerHTML = `
-      <div><span class="label">Image:</span> <span class="value">${displayName}</span></div>
-      <div><span class="label">Size:</span> <span class="value">${displaySize}</span></div>
-      <div><span class="label">Rays:</span> <span class="value" id="statusRays">${totalRays.toLocaleString()}</span></div>
-      <div><span class="label">Hits:</span> <span class="value" id="statusHits">${totalHits.toLocaleString()}</span></div>
+      <div class="status-image"><span class="label">Image:</span> <span class="value">${displayName}</span></div>
+      <div class="status-size"><span class="label">Size:</span> <span class="value">${displaySize}</span></div>
+      <div class="status-rays"><span class="label">Rays:</span> <span class="value" id="statusRays">${totalRays.toLocaleString()}</span></div>
+      <div class="status-hits"><span class="label">Hits:</span> <span class="value" id="statusHits">${totalHits.toLocaleString()}</span></div>
     `;
 }
 
@@ -551,14 +601,11 @@ document.getElementById('startTraceBtn').addEventListener('click', () => {
     showToast('Please load an image first', 'error');
     return;
   }
-  
   updateImageSize();
-  
   if (imageMesh) {
     imageMesh.geometry.dispose();
     imageMesh.geometry = new THREE.PlaneGeometry(imageDims.w, imageDims.h);
   }
-  
   let density = parseInt(document.getElementById('rayDensity').value);
   if (isNaN(density) || density < 1) density = 1;
   if (density > 18) {
@@ -566,8 +613,43 @@ document.getElementById('startTraceBtn').addEventListener('click', () => {
     document.getElementById('rayDensity').value = 18;
     showToast("Max density is 18 rays/cm", "error");
   }
-  
   generateRays(density);
+});
+
+// ============ Rotate Box Button ============
+let isRotated = false;
+document.getElementById('rotateBtn').addEventListener('click', () => {
+    isRotated = !isRotated;
+    if (isRotated) {
+        BOX_X = 10;
+        BOX_Z = 15;
+    } else {
+        BOX_X = 15;
+        BOX_Z = 10;
+    }
+    
+    buildCuboid();
+    
+    if (imageCanvas) {
+        let density = parseInt(document.getElementById('rayDensity').value) || 10;
+        if (density > 18) density = 18;
+        generateRays(density);
+        showToast(`Box Rotated! Re-tracing rays...`, 'info');
+    } else {
+        showToast(`Box Rotated!`, 'info');
+    }
+});
+
+// ============ Eye Toggle Button ============
+let isUIHidden = false;
+const eyeToggle = document.getElementById('eyeToggle');
+const eyeOpenSVG = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+const eyeClosedSVG = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+
+eyeToggle.addEventListener('click', () => {
+    isUIHidden = !isUIHidden;
+    document.body.classList.toggle('hide-ui', isUIHidden);
+    eyeToggle.querySelector('svg').innerHTML = isUIHidden ? eyeClosedSVG : eyeOpenSVG;
 });
 
 // ============ Massive Ray Generation ============
@@ -616,7 +698,7 @@ function generateRays(density) {
           const v = (j / (numZ - 1)) * 2 - 1;
           const sz = v * (imageDims.h / 2);
 
-          if (alpha > 128 && (Math.abs(sx) > 10.01 || Math.abs(sz) > 10.01)) {
+          if (alpha > 128 && (Math.abs(sx) > HALF_X + 0.01 || Math.abs(sz) > HALF_Z + 0.01)) {
             
             const rIdx = rayCount * 6;
             rayPositions[rIdx] = sx; rayPositions[rIdx+1] = startY; rayPositions[rIdx+2] = sz;
@@ -631,38 +713,38 @@ function generateRays(density) {
             let hitFace = null, hitU = 0, hitV = 0, hitX = 0, hitY = 0, hitZ = 0;
 
             if (dirZ !== 0) {
-              const t = (10 - sz) / dirZ;
+              const t = (HALF_Z - sz) / dirZ;
               if (t > 0.001 && t < bestT) {
                 const hx = sx + dirX * t;
                 const hy = startY + dirY * t;
-                if (Math.abs(hx) <= 10 && hy >= 0 && hy <= 10) {
-                  bestT = t; hitFace = 'front'; hitU = hx; hitV = hy; hitX = hx; hitY = hy; hitZ = 10;
+                if (Math.abs(hx) <= HALF_X && hy >= 0 && hy <= BOX_Y) {
+                  bestT = t; hitFace = 'front'; hitU = hx + HALF_X; hitV = hy; hitX = hx; hitY = hy; hitZ = HALF_Z;
                 }
               }
-              const t2 = (-10 - sz) / dirZ;
+              const t2 = (-HALF_Z - sz) / dirZ;
               if (t2 > 0.001 && t2 < bestT) {
                 const hx = sx + dirX * t2;
                 const hy = startY + dirY * t2;
-                if (Math.abs(hx) <= 10 && hy >= 0 && hy <= 10) {
-                  bestT = t2; hitFace = 'back'; hitU = hx; hitV = hy; hitX = hx; hitY = hy; hitZ = -10;
+                if (Math.abs(hx) <= HALF_X && hy >= 0 && hy <= BOX_Y) {
+                  bestT = t2; hitFace = 'back'; hitU = -hx + HALF_X; hitV = hy; hitX = hx; hitY = hy; hitZ = -HALF_Z;
                 }
               }
             }
             if (dirX !== 0) {
-              const t = (10 - sx) / dirX;
+              const t = (HALF_X - sx) / dirX;
               if (t > 0.001 && t < bestT) {
                 const hz = sz + dirZ * t;
                 const hy = startY + dirY * t;
-                if (Math.abs(hz) <= 10 && hy >= 0 && hy <= 10) {
-                  bestT = t; hitFace = 'right'; hitU = hz; hitV = hy; hitX = 10; hitY = hy; hitZ = hz;
+                if (Math.abs(hz) <= HALF_Z && hy >= 0 && hy <= BOX_Y) {
+                  bestT = t; hitFace = 'right'; hitU = -hz + HALF_Z; hitV = hy; hitX = HALF_X; hitY = hy; hitZ = hz;
                 }
               }
-              const t2 = (-10 - sx) / dirX;
+              const t2 = (-HALF_X - sx) / dirX;
               if (t2 > 0.001 && t2 < bestT) {
                 const hz = sz + dirZ * t2;
                 const hy = startY + dirY * t2;
-                if (Math.abs(hz) <= 10 && hy >= 0 && hy <= 10) {
-                  bestT = t2; hitFace = 'left'; hitU = hz; hitV = hy; hitX = -10; hitY = hy; hitZ = hz;
+                if (Math.abs(hz) <= HALF_Z && hy >= 0 && hy <= BOX_Y) {
+                  bestT = t2; hitFace = 'left'; hitU = hz + HALF_Z; hitV = hy; hitX = -HALF_X; hitY = hy; hitZ = hz;
                 }
               }
             }
@@ -772,29 +854,31 @@ renderer.domElement.addEventListener('mouseup', (e) => {
 function exportFaceAsSVG(face) {
   const def = face.userData;
   const name = def.name;
+  const uSize = def.uSize; 
+  const vSize = def.vSize; 
   const uvArray = faceHits[name];
   const hitCount = uvArray.length / 2;
 
   showToast(`Generating Vector SVG for ${name.toUpperCase()}...`, 'info');
 
   const pad = 0.1; 
-  const vbW = 20 + pad * 2;
-  const vbH = 10 + pad * 2;
+  const vbW = uSize + pad * 2;
+  const vbH = vSize + pad * 2;
   const scale = 50; 
   const pxW = vbW * scale;
   const pxH = vbH * scale;
   
   const parts = [];
   parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${pxW}" height="${pxH}" viewBox="${-pad} ${-pad} ${vbW} ${vbH}" overflow="hidden">`);
-  parts.push(`<rect x="0" y="0" width="20" height="10" fill="none" stroke="#4a90e2" stroke-width="0.05"/>`);
+  parts.push(`<rect x="0" y="0" width="${uSize}" height="${vSize}" fill="none" stroke="#4a90e2" stroke-width="0.05"/>`);
   
   if (hitCount > 0) {
     parts.push(`<path d="`);
     for (let i = 0; i < uvArray.length; i += 2) {
       const u = uvArray[i];
       const v = uvArray[i + 1];
-      const x = (u + 10).toFixed(2);
-      const y = (10 - v).toFixed(2);
+      const x = u.toFixed(2);
+      const y = (vSize - v).toFixed(2);
       parts.push(`M${x} ${y}h.1v.1h-.1z`);
     }
     parts.push(`" fill="#cc44ff" />`);
